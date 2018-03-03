@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <h2>Register with Social Networks</h2>
                 <?=
                 yii\authclient\widgets\AuthChoice::widget([
-                    'baseAuthUrl' => ['site/auth'],
+                    'baseAuthUrl' => ['/user/default/auth'],
                     'popupMode' => false,
                 ])
                 ?>
