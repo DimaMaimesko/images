@@ -34,6 +34,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
 
             <?php ActiveForm::end(); ?>
-        </div>
+          </div>  
+            <div class="col-lg-5">
+                <h2>Register with Social Networks</h2>
+                <?=
+                yii\authclient\widgets\AuthChoice::widget([
+                    'baseAuthUrl' => ['site/auth'],
+                    'popupMode' => false,
+                ])
+                ?>
+               
+            </div> 
+        
     </div>
 </div>
