@@ -3,9 +3,10 @@ namespace frontend\modules\user\components;
 
 use Yii;
 use frontend\modules\user\models\Auth;
-use frontend\modules\user\models\User;
+use frontend\models\User;
 use yii\authclient\ClientInterface;
 use yii\helpers\ArrayHelper;
+ 
 /**
  * Description of AuthHandler
  *
@@ -17,6 +18,7 @@ class AuthHandler {
     
     public function __construct(ClientInterface $client) {//$client - это обьект который знает как взаимодействовать с ресурсом, т.е. с провайдером 
         $this->client = $client;//запоминаем этот обьект в текущем классе
+        
     }
     
     public function handle()//метод вызывается сразу при создании AuthHandler и здесь производится вся основная работа
@@ -26,35 +28,23 @@ class AuthHandler {
         }
        
         $attributes = $this->client->getUserAttributes(); //обращаемся к провайдеру данных чтобы получить данные пользователя на сайте
-        if (isset($attributes['emails'][0]['value']))//если это Google
+        if ($this->client->getId() == 'google')//если это Google
         {
             $tmp['email'] = $attributes['emails'][0]['value'];
             $tmp['name'] = $attributes['displayName'];
             $tmp['id'] = $attributes['id'];
             $attributes = $tmp;
         }
-        if (isset($attributes['login']))//если это GitHub
+        if ($this->client->getId() == 'github')//если это GitHub
         {
             $tmp['email'] = $attributes['email'];
             $tmp['name'] = $attributes['login'];
             $tmp['id'] = $attributes['id'];
             $attributes = $tmp;
         }
-      
-//        echo '<pre>';
-//        print_r($attributes);
-//        echo '</pre>';
-//        echo '<hr>';
-//        print_r($attributes['displayName']);
-//        echo '<hr>';
-//        print_r($attributes['id']);
-//        echo '<hr>';
-//        print_r($attributes['emails'][0]['value']);
-//        
-//        
-//        die;
-
+   
         $auth = $this->findAuth($attributes);//выполняем поиск по таблице auth, в $auth будет находится обьект ActiveRecord 
+       // 
         if ($auth) {
             /* @var User $user */
             $user = $auth->user;//находим обьект пользователя который выполнил вход
@@ -63,9 +53,13 @@ class AuthHandler {
         if ($user = $this->createAccount($attributes)) {
             return Yii::$app->user->login($user);
         }
+        else{//если email уже зарегестрирован, выясним через какую сеть у подскажем это юзеру
+           $user = User::find()->where(['email' => $attributes['email']])->one();
+           $auth = Auth::find()->where(['user_id' => $user->id])->one();
+           Yii::$app->session->setFlash('warning', "Sorry. Email is already registered by ".$auth->source);
+        }
     }
-    
-    /**
+     /**
      * @param array $attributes
      * @return Auth
      */
@@ -78,8 +72,7 @@ class AuthHandler {
         ];
         return Auth::find()->where($params)->one();
     }
-
-    /**
+     /**
      * 
      * @param type $attributes
      * @return User|null

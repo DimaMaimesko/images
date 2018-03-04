@@ -47,6 +47,7 @@ return [
             'showScriptName' => false,
             'rules' => [
                'privacy' => 'site/index', 
+               'profile/<id:\d+>' => 'user/profile/view', 
             ],
         ],
         
