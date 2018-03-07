@@ -20,6 +20,11 @@ use yii\web\IdentityInterface;
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
+ * @property string $nickname
+ * @property string $about
+ * @property integer $type
+ * @property string $picture
+ 
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -190,4 +195,47 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+    
+    public function getNickname()
+    {
+        if ($this->nickname){
+            return $this->nickname;
+        }return $this->getId();
+    }
+    
+    public function findUserById($id)
+    {
+        if ($user = self::findOne($id))
+                return $user;
+        throw new \yii\web\NotFoundHttpException();
+    }
+    
+    public function followUser(User $targetUser)
+    {
+       $redis = Yii::$app->redis;
+       $redis->executeCommand('sadd', ['user:'.$this->getId().':subscriptions', $targetUser->getId()]);
+       $redis->executeCommand('sadd', ['user:'.$targetUser->getId().':followers', $this->getId()]);
+    }
+    public function unfollowUser(User $targetUser)
+    {
+       $redis = Yii::$app->redis;
+       $redis->executeCommand('srem', ['user:'.$this->getId().':subscriptions', $targetUser->getId()]);
+       $redis->executeCommand('srem', ['user:'.$targetUser->getId().':followers', $this->getId()]);
+    }
+    
+    public function getSubscriptions()
+    {
+       $redis = Yii::$app->redis;
+       return $redis->executeCommand('smembers', ['user:'.$this->getId().':subscriptions']);
+    }
+    
+    public function getFollowers()
+    {
+       $redis = Yii::$app->redis;
+       return $redis->executeCommand('smembers', ['user:'.$this->getId().':followers']);
+    }
+    
+    
+    
+    
 }

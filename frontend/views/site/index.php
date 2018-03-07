@@ -1,6 +1,7 @@
 <?php
 use yii\helpers\Url;
 /* @var $this yii\web\View */
+/* @var $users[] frontend\models\User */
 
 $this->title = 'My Yii Application';
 ?>
@@ -20,7 +21,7 @@ $this->title = 'My Yii Application';
             <div class="col-lg-4">
                 <h2>Heading</h2>
                 <?php foreach ($users as $user): ?>
-                <a href="<?= Url::to(['user/profile/view','id'=>$user['id']]) ?>"><?= $user['username']; ?></a>   
+                <a href="<?= Url::to(['user/profile/view','nickname' => $user->getNickname()]); ?>"><?= $user->username; ?></a>   
                 <hr>
                 <?php endforeach; ?>
                

@@ -47,10 +47,17 @@ return [
             'showScriptName' => false,
             'rules' => [
                'privacy' => 'site/index', 
-               'profile/<id:\d+>' => 'user/profile/view', 
+               'profile/<nickname:\w+>' => 'user/profile/view', 
+               'subscribe/<id:\d+>' => 'user/profile/subscribe', 
+               'unsubscribe/<id:\d+>' => 'user/profile/unsubscribe', 
             ],
         ],
-        
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => 'localhost',
+            'port' => 6379,
+            'database' => 0,
+        ],
         
     ],
     'params' => $params,
