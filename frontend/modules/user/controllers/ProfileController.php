@@ -4,7 +4,7 @@ namespace frontend\modules\user\controllers;
 use yii\web\Controller;
 use frontend\models\User;
 use Yii;
-
+use yii\helpers\Html;
 /**
  * Description of ProfileController
  *
@@ -14,19 +14,15 @@ class ProfileController extends Controller {
     //put your code here
     public function actionView($nickname)
     {
-        
-//         $redis = Yii::$app->redis;
-//         $result = $redis->executeCommand('set', ['test_collection', 'key1']);
-//         echo  $redis->get('test_collection');die;
          
          $user = $this->findUser($nickname);
+         $isFollower = $this->isFollower($user);
          return $this->render('view',[
             'user' => $user,
-            
+            'isFollower' => $isFollower,
         ]);
     }
     /**
-     * 
      * @param string $nickname
      * @return User
      * @throws \yii\web\NotFoundHttpException
@@ -38,8 +34,56 @@ class ProfileController extends Controller {
         } 
         throw new \yii\web\NotFoundHttpException();
     }
+    public function isFollower($user)
+    {
+        $currentUserId = Yii::$app->user->id;
+        $targetUserId = $user->id;
+        $redis = Yii::$app->redis;
+        $arrayOfFollowers = $redis->executeCommand('smembers', ['user:'.$targetUserId.':followers']);
+        foreach ($arrayOfFollowers as $follower) {
+            if($currentUserId == $follower)
+                return true;
+        }
+        return false;
+    }
     
-//    public function actionGenerate()
+
+    public function actionSubscribe($id)
+    {
+        if (Yii::$app->user->isGuest) {
+            Yii::$app->session->setFlash('info', 'You need login first!');
+            return $this->redirect(['/user/default/login']);
+        }
+        /* @var $currentUser = User */
+        $currentUser = Yii::$app->user->identity;
+        $targetUser = User::findUserById($id);
+
+        $currentUser->followUser($targetUser);
+        Yii::$app->session->setFlash('success', 'You are following<b>  '.Html::encode($targetUser->username).' </b>now!');
+        return $this->redirect(['/user/profile/view','nickname' => $targetUser->getNickname()]);
+    }
+
+    
+    public function actionUnsubscribe($id)
+    {   
+        if (Yii::$app->user->isGuest) {
+            Yii::$app->session->setFlash('info', 'You need login first!');
+            return $this->redirect(['/user/default/login']);
+        }
+        /* @var $currentUser = User */
+        $currentUser = Yii::$app->user->identity;
+        $targetUser = User::findUserById($id);
+
+        $currentUser->unfollowUser($targetUser);
+         Yii::$app->session->setFlash('warning', 'You are not following<b> '.Html::encode($targetUser->username).' </b>now!');
+        return $this->redirect(['/user/profile/view','nickname' => $targetUser->getNickname()]);
+    }
+    
+    
+    
+    
+    
+    //    public function actionGenerate()
 //    {
 //        $faker = \Faker\Factory::create();
 //        
@@ -57,34 +101,4 @@ class ProfileController extends Controller {
 //            $user->save(false);
 //        }
 //}
-    public function actionSubscribe($id)
-    {
-        if (Yii::$app->user->isGuest) {
-            Yii::$app->session->setFlash('info', 'You need login first!');
-            return $this->redirect(['/user/default/login']);
-        }
-        /* @var $currentUser = User */
-        $currentUser = Yii::$app->user->identity;
-        $targetUser = User::findUserById($id);
-
-        $currentUser->followUser($targetUser);
-       
-        return $this->redirect(['/user/profile/view','nickname' => $targetUser->getNickname()]);
-    }
-
-    
-    public function actionUnsubscribe($id)
-    {   
-        if (Yii::$app->user->isGuest) {
-            Yii::$app->session->setFlash('info', 'You need login first!');
-            return $this->redirect(['/user/default/login']);
-        }
-        /* @var $currentUser = User */
-        $currentUser = Yii::$app->user->identity;
-        $targetUser = User::findUserById($id);
-
-        $currentUser->unfollowUser($targetUser);
-       
-        return $this->redirect(['/user/profile/view','nickname' => $targetUser->getNickname()]);
-    }
 }

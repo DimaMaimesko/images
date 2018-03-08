@@ -226,13 +226,39 @@ class User extends ActiveRecord implements IdentityInterface
     public function getSubscriptions()
     {
        $redis = Yii::$app->redis;
-       return $redis->executeCommand('smembers', ['user:'.$this->getId().':subscriptions']);
+       $setOfSubscriptions = $redis->executeCommand('smembers', ['user:'.$this->getId().':subscriptions']);
+       return User::find()->select('id,username,nickname')->where(['id' => $setOfSubscriptions])->orderBy('username')->asArray()->all();
+    }
+    public function getNumberOfSubscriptions()
+    {
+       $redis = Yii::$app->redis;
+       return $redis->executeCommand('scard', ['user:'.$this->getId().':subscriptions']);
+       
     }
     
     public function getFollowers()
     {
        $redis = Yii::$app->redis;
-       return $redis->executeCommand('smembers', ['user:'.$this->getId().':followers']);
+       $setOfFollowers = $redis->executeCommand('smembers', ['user:'.$this->getId().':followers']);
+       return User::find()->select('id,username,nickname')->where(['id' => $setOfFollowers])->orderBy('username')->asArray()->all();
+    }
+    public function getNumberOfFollowers()
+    {
+       $redis = Yii::$app->redis;
+       return $redis->executeCommand('scard', ['user:'.$this->getId().':followers']);
+    }
+    
+    public function getFriends()
+    {
+       $redis = Yii::$app->redis;
+       $setOfFriends = $redis->sinter("user:{$this->getId()}:subscriptions","user:{$this->getId()}:followers");
+       return User::find()->select('id,username,nickname')->where(['id' => $setOfFriends])->orderBy('username')->asArray()->all();
+    }
+    public function getNumberOfFriends()
+    {
+       $redis = Yii::$app->redis;
+       $setOfFriends = $redis->sinter("user:{$this->getId()}:subscriptions","user:{$this->getId()}:followers");
+       return count($setOfFriends);
     }
     
     

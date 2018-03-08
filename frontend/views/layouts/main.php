@@ -39,6 +39,9 @@ AppAsset::register($this);
         ['label' => 'Home', 'url' => ['/site/index']],
    
     ];
+    if (!Yii::$app->user->isGuest) {
+         $menuItems[] = ['label' => 'MyPage', 'url' => ['/user/profile/view','nickname' => Yii::$app->user->id]];
+    }
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Signup', 'url' => ['/user/default/signup']];
         $menuItems[] = ['label' => 'Login', 'url' => ['/user/default/login']];
