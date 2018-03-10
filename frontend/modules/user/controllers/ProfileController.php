@@ -5,6 +5,8 @@ use yii\web\Controller;
 use frontend\models\User;
 use Yii;
 use yii\helpers\Html;
+use frontend\modules\user\models\forms\PictureForm;
+use yii\web\UploadedFile;
 /**
  * Description of ProfileController
  *
@@ -14,12 +16,13 @@ class ProfileController extends Controller {
     //put your code here
     public function actionView($nickname)
     {
-         
+         $modelPicture = new PictureForm();
          $user = $this->findUser($nickname);
          $isFollower = $this->isFollower($user);
          return $this->render('view',[
             'user' => $user,
             'isFollower' => $isFollower,
+            'modelPicture' => $modelPicture,
         ]);
     }
     /**
@@ -79,7 +82,23 @@ class ProfileController extends Controller {
         return $this->redirect(['/user/profile/view','nickname' => $targetUser->getNickname()]);
     }
     
-    
+    public function actionUploadPicture()
+    {
+        $model = new PictureForm();
+        $model->picture = UploadedFile::getInstance($model, 'picture');//в свойство picture загружаем экземпляр класса UploadedFile 
+        //теперь $model->picture содержит изображение которое мы загрузили
+        if ($model->validate()){
+            $user = Yii::$app->user->identity;
+            $user->picture = Yii::$app->storage->saveUploadedFile($model->picture);
+            if ($user->save(false, ['picture'])){ // save(false, ['picture']) - вылидацию проводить не требуется а так же сохраняем только атрибут picture 
+                 print_r($user->attributes);
+            }
+           
+           
+        }
+        
+        echo '<pre>';print_r($model->getErrors());echo '</pre>';
+    }
     
     
     

@@ -261,6 +261,12 @@ class User extends ActiveRecord implements IdentityInterface
        return count($setOfFriends);
     }
     
+    public function getPicture()
+    {
+       if ($this->picture){
+           return Yii::$app->storage->getFile($this->picture);
+       }
+    }
     
     
     

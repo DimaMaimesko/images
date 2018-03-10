@@ -1,12 +1,17 @@
 <?php
-use yii\helpers\Html;
-Use yii\helpers\HtmlPurifier;
-use yii\helpers\Url;
-use Yii;
 /* @var $user frontend\models\User */
+/* @var $modelPicture frontend\modules\user\models\forms\PictureForm; */
+use yii\helpers\Html;
+use yii\helpers\HtmlPurifier;
+use yii\helpers\Url;
+//use Yii;
+use dosamigos\fileupload\FileUpload;
 
 ?>
-
+<div class="row">
+    <div class="col-md-4"></div>
+  <div class="col-md-4">
+<img src="<?php echo $user->getPicture(); ?>" style="max-width: 90%" alt="..." class="img-circle">
 <h3><?php  echo Html::encode($user->username).' ('.Html::encode($user->nickname).')';?></h3>
 <p><?php  echo HtmlPurifier::process($user->about);?></p><?php//благодяра HtmlPurifier мы можем разрешить пользователю воодить html код(например ссылки), при этом он будет экранирован ?>
 
@@ -18,6 +23,9 @@ use Yii;
         <a href="<?= Url::to(['/user/profile/unsubscribe','id' => $user->getId()]); ?>" class="btn btn-warning">Unsubscribe</a>
     <?php endif; ?>
 <?php endif; ?>
+<hr>       
+
+        
 <!-- Small modal -->
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal1">Following (<?= $user->getNumberOfSubscriptions();  ?>)</button>
 <!-- Modal -->
@@ -93,3 +101,31 @@ use Yii;
     </div>
   </div>
 </div>
+
+<hr>
+
+<?= FileUpload::widget([
+    'model' => $modelPicture,
+    'attribute' => 'picture',
+    'url' => ['/user/profile/upload-picture'], // your url, this is just for demo purposes,
+    'options' => ['accept' => 'image/*'],
+    'clientOptions' => [
+        'maxFileSize' => 8000000
+    ],
+    // Also, you can specify jQuery-File-Upload events
+    // see: https://github.com/blueimp/jQuery-File-Upload/wiki/Options#processing-callback-options
+    'clientEvents' => [
+        'fileuploaddone' => 'function(e, data) {
+                                console.log(e);
+                                console.log(data);
+                            }',
+        'fileuploadfail' => 'function(e, data) {
+                                console.log(e);
+                                console.log(data);
+                            }',
+    ],
+]); ?>
+</div>
+ <div class="col-md-4"></div>
+</div>
+    
