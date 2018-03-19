@@ -7,6 +7,9 @@ use Yii;
 use yii\helpers\Html;
 use frontend\modules\user\models\forms\PictureForm;
 use yii\web\UploadedFile;
+use yii\web\Response;
+use frontend\models\Images;
+use frontend\models\UploadForm;
 /**
  * Description of ProfileController
  *
@@ -14,8 +17,29 @@ use yii\web\UploadedFile;
  */
 class ProfileController extends Controller {
     //put your code here
+    const REAL_SIZE = 0;
+    const SMALL_SIZE = 1;
+    
+    
     public function actionView($nickname)
     {
+//                    $model = new UploadForm;
+//                    if (Yii::$app->request->isPost){
+//                       
+//                        $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+//                        if ($model->upload()){
+//                             $modelPicture = new PictureForm();
+//                             $user = $this->findUser($nickname);
+//                             $isFollower = $this->isFollower($user);
+//                                return $this->render('view',[
+//                                'user' => $user,
+//                                'isFollower' => $isFollower,
+//                                'modelPicture' => $modelPicture,
+//                                'model' => $model,
+//                                ]);  
+//                        }
+//                    }
+        
          $modelPicture = new PictureForm();
          $user = $this->findUser($nickname);
          $isFollower = $this->isFollower($user);
@@ -23,6 +47,7 @@ class ProfileController extends Controller {
             'user' => $user,
             'isFollower' => $isFollower,
             'modelPicture' => $modelPicture,
+           
         ]);
     }
     /**
@@ -82,25 +107,43 @@ class ProfileController extends Controller {
         return $this->redirect(['/user/profile/view','nickname' => $targetUser->getNickname()]);
     }
     
-    public function actionUploadPicture()
+    public function actionUploadPicture()   //AJAX
     {
+        Yii::$app->response->format = Response::FORMAT_JSON;//теперь мы можем возвращать массив
         $model = new PictureForm();
         $model->picture = UploadedFile::getInstance($model, 'picture');//в свойство picture загружаем экземпляр класса UploadedFile 
         //теперь $model->picture содержит изображение которое мы загрузили
         if ($model->validate()){
             $user = Yii::$app->user->identity;
-            $user->picture = Yii::$app->storage->saveUploadedFile($model->picture);
-            if ($user->save(false, ['picture'])){ // save(false, ['picture']) - вылидацию проводить не требуется а так же сохраняем только атрибут picture 
-                 print_r($user->attributes);
+            
+            $array = Yii::$app->storage->saveUploadedFile($model->picture,$user->id);//  id/ae/a7/8ea26ed7edb60db42d574eb5f4cd6c0deb78.jpg
+            $user->picture = $array['fName']; 
+            if ($user->save(false, ['picture'])){ // save(false, ['picture']) - валидацию проводить не требуется а так же сохраняем только атрибут picture 
+                return [         //это будет выглядеть вот так: {"success":true,"pictureUri":"/uploads/33/95/6d94b3c303573e2e9677cedfab68fd5626c7.jpg"}
+                     'success' => true,
+                     'pictureUri' => Yii::$app->storage->getFile($user->picture),
+                     'name' => $array['pName'],
+                     'size' => $array['pSize'],
+                 ];
             }
-           
-           
         }
-        
-        echo '<pre>';print_r($model->getErrors());echo '</pre>';
+       return ['success' => false, 'errors' => $model->getErrors()];
     }
     
-    
+    public function actionDeleteImage($id)
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['/user/default/login']);
+        }
+        /* @var $user User */
+         $user = Yii::$app->user->identity;
+         if ($user->deletePicture($user->id)){
+             Yii::$app->session->setFlash('success', 'Picture deleted');
+         }else{
+             Yii::$app->session->setFlash('danger', 'Error occured');
+         }
+         return $this->redirect(['/user/profile/view','nickname' => $user->getNickname()]);
+   }
     
     //    public function actionGenerate()
 //    {

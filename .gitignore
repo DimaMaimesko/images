@@ -34,3 +34,8 @@ phpunit.phar
 # vagrant runtime
 /.vagrant
 /frontend/web/uploads/
+/frontend/web/my_uploads/
+/frontend/web/91208584.jpg
+/frontend/web/538827211.jpg
+/frontend/web/download.jpg
+/frontend/web/iiimage.jpg

@@ -9,7 +9,7 @@ use yii\web\UploadedFile;
  */
 interface StorageInterface {
     //put your code here
-    public function saveUploadedFile(UploadedFile $file);//сохранение файла
+    public function saveUploadedFile(UploadedFile $file, $userID);//сохранение файла
     
     public function getFile(string $filename);//получение полного пути файла по его имени
             

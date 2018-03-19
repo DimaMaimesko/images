@@ -1,4 +1,6 @@
 html,
+
+
 body {
     height: 100%;
 }
@@ -118,3 +120,8 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+.display-none
+                  {
+                   display: none;
+                  }
