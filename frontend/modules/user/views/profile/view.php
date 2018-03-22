@@ -10,9 +10,15 @@ use yii\helpers\Url;
 use dosamigos\fileupload\FileUpload;
 use yii\widgets\ActiveForm;
 use yii\web\UploadedFile;
+use frontend\widgets\postslist\Postslist;
 ?>
 <div class="row">
-    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <h3>Your posts:</h3>
+        <div style="border: 3px dotted greenyellow; padding: 5px; margin: 5px;">
+            <?php echo Postslist::widget(['id' => $user->id]);//$user->id - это id пользователя профайл которого мы сейчас просматриваем  ?>  
+        </div>
+    </div>
     <div class="col-md-4">
         
         <img src="<?php echo $user->getPicture(); ?>" id="profile-picture" style="max-width: 90%" class="img-circle center-block">
@@ -21,7 +27,7 @@ use yii\web\UploadedFile;
         <div id="profile-image"></div>
                
         <hr>
-        <?php if (Yii::$app->user->id ==$user->id): ?>
+        <?php if (Yii::$app->user->id ==$user->id): //Yii::$app->user->id - это id пользователя профайл который сейчас залогинен?>
             <?=
             FileUpload::widget([
                 'model' => $modelPicture,
@@ -136,8 +142,11 @@ use yii\web\UploadedFile;
                 </div>
             </div>
         </div>
-
-       
+        <br>
+        <hr>
+    <?php if (Yii::$app->user->id ==$user->id): ?>
+        <a href="<?= Url::to(['/post/default/create', 'id' => $user->getId()]); ?>" class="btn btn-warning center-block">Create post...</a>   
+    <?php endif; ?>
     </div>
     <div class="col-md-4"></div>
 </div>
