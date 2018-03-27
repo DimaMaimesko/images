@@ -45,4 +45,55 @@ class DefaultController extends Controller
         'model' => $model,
     ]);
 }
+
+public function actionLike()
+{
+     if (Yii::$app->user->isGuest) {
+            return $this->redirect(['/user/default/login']);
+        }
+     Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+     $postId = Yii::$app->request->post('id'); //это id поста который мы лайкаем
+     $currentUserId = Yii::$app->user->id;
+     if (Post::setLikeToPost($postId,$currentUserId))
+     { 
+         $usersWhoLikes = Post::getLikes($postId);
+         return [
+         'success' => true,
+         'id' => $postId,
+         'usersWhoLikes' => $usersWhoLikes,
+         'countLikes' => Post::countLikes($postId),   
+              ];
+     }
+     else {
+         return [
+         'success' => false,
+         'id' => $postId,
+              ];
+         }
+}
+public function actionDisLike()
+{
+     if (Yii::$app->user->isGuest) {
+            return $this->redirect(['/user/default/login']);
+        }
+     Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+     $postId = Yii::$app->request->post('id'); //это id поста который мы лайкаем
+     $currentUserId = Yii::$app->user->id;
+     if (Post::delLikeToPost($postId,$currentUserId))
+     {
+         $usersWhoLikes = Post::getLikes($postId);
+         return [
+         'success' => true,
+         'id' => $postId,
+         'usersWhoLikes' => $usersWhoLikes,
+         'countLikes' => Post::countLikes($postId),   
+              ];
+     }
+     else {
+         return [
+         'success' => false,
+         'id' => $postId,
+              ];
+         }
+}
 }

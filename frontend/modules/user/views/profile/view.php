@@ -6,20 +6,17 @@
 use yii\helpers\Html;
 use yii\helpers\HtmlPurifier;
 use yii\helpers\Url;
-//use Yii;
 use dosamigos\fileupload\FileUpload;
-use yii\widgets\ActiveForm;
-use yii\web\UploadedFile;
 use frontend\widgets\postslist\Postslist;
 ?>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <h3>Your posts:</h3>
         <div style="border: 3px dotted greenyellow; padding: 5px; margin: 5px;">
             <?php echo Postslist::widget(['id' => $user->id]);//$user->id - это id пользователя профайл которого мы сейчас просматриваем  ?>  
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
         
         <img src="<?php echo $user->getPicture(); ?>" id="profile-picture" style="max-width: 90%" class="img-circle center-block">
         <h5 id="name"></h5>
@@ -54,7 +51,7 @@ use frontend\widgets\postslist\Postslist;
          <?php endif; ?>
           
         
-        <h3><?php echo Html::encode($user->username) . ' (' . Html::encode($user->nickname) . ')'; ?></h3>
+        <h3 class="text-center"><?php echo Html::encode($user->username) . ' (' . Html::encode($user->nickname) . ')'; ?></h3>
         <p><?php echo HtmlPurifier::process($user->about); ?></p><?php //благодяра HtmlPurifier мы можем разрешить пользователю воодить html код(например ссылки), при этом он будет экранирован  ?>
 
         <?php if (($user->id) != Yii::$app->user->id): ?>
@@ -148,6 +145,6 @@ use frontend\widgets\postslist\Postslist;
         <a href="<?= Url::to(['/post/default/create', 'id' => $user->getId()]); ?>" class="btn btn-warning center-block">Create post...</a>   
     <?php endif; ?>
     </div>
-    <div class="col-md-4"></div>
+    <div class="col-md-3"></div>
 </div>
 

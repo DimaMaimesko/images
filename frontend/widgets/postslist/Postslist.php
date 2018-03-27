@@ -13,8 +13,10 @@ class Postslist extends Widget{
     public $id = null;
     public function run()
     {
-        $postsList = new Post();
+        $currentUserId = Yii::$app->user->id;//будем использовать для вывода кнопок Like и Dislike
         
+        
+        $postsList = new Post();
         $postsList = $postsList->getUserPosts($this->id);
         if ($postsList){
              //Yii::$app->session->setFlash('success', 'New post added');
@@ -24,6 +26,7 @@ class Postslist extends Widget{
         }
         return $this->render('index',[
            'postsList' => $postsList, 
+           'currentUserId' => $currentUserId, 
         ]); 
     }
 }

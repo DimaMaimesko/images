@@ -1,23 +1,34 @@
 <?php
 /* @var $postsList frontend\modules\post\models\Post; */
+
+
 //use yii\helpers\Html;
 //use yii\helpers\HtmlPurifier;
 //use yii\helpers\Url;
-use common\widgets\Alert;?>
+use common\widgets\Alert;
+use frontend\modules\post\models\Post?>
 <?= Alert::widget() ?>
 
 <?php foreach ($postsList as $post): ?>
 <hr>
+<p style="font-size:75%" class="text-right"><em><?php if ($post['created_at'])echo date('Y-m-d H:i',$post['created_at']); ?></em></p>
 <?php echo $post['content']; ?>
-
 <br>
-
 <img src="/uploads/resized/<?php echo $post['photo']; ?>" id="profile-picture" style="max-width: 50%" class="center-block">
 <hr>
+
+<button type="button" class="btn btn-primary btn-xs btn-like <?php echo (('user-id:'.$currentUserId) && (Post::isLiked($post['id'], $currentUserId)))? "display-none" : ""; ?>" data-id="<?php echo $post['id']; ?>">
+    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+    Like <span class="count-like badge"><?php echo Post::countLikes($post['id']); ?></span></button>
+
+<button type="button" class="btn btn-primary btn-xs btn-dislike <?php echo (('user-id:'.$currentUserId) && (Post::isLiked($post['id'], $currentUserId)))? "" : "display-none"; ?>" data-id="<?php echo $post['id']; ?>">
+    <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+    Dislike <span class="count-dislike badge"><?php echo Post::countLikes($post['id']); ?></span></button>
+
 <?php endforeach; ?>
-    
+ 
 
-
+   
 
 
 
