@@ -23,7 +23,7 @@ class DefaultController extends Controller
         if ($model->load(Yii::$app->request->post())) {
         
         $model->photo = UploadedFile::getInstance($model, 'photo');
-        if ($model->validate()) {
+        if ($model->validate()) {//так же выполнится событие EVENT_AFTER_VALIDATE 
             // form inputs are valid, do something here
              $user = Yii::$app->user->identity;
              $post = new Post();
@@ -40,7 +40,6 @@ class DefaultController extends Controller
              return $this->redirect(['/user/profile/view','nickname' => $user->getNickname()]);
         }
     }
-
     return $this->render('PostFormView', [
         'model' => $model,
     ]);
