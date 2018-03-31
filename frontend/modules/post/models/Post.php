@@ -4,6 +4,7 @@ namespace frontend\modules\post\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+
 /**
  * This is the model class for table "post".
  *
@@ -57,6 +58,24 @@ class Post extends \yii\db\ActiveRecord
     public function getUserPosts($id)
     {
         return $this->find()->where(['user_id'=>$id])->asArray()->all();
+    }
+    
+    public function getUserIdBy($postId)
+    {
+        $post = Post::findOne($postId);
+        //print_r($postId); print_r($post->user_id); die;
+        return $post->user_id;
+    }
+    
+    
+    
+    public function getPost($postId)
+    {
+       
+      $post = Post::find()->where(['id' => $postId])->one();
+       //print_r($postId); die;
+        return  $post;
+        
     }
     
     public static function setLikeToPost($postId,$currentUserId)

@@ -8,6 +8,7 @@ use yii\helpers\HtmlPurifier;
 use yii\helpers\Url;
 use dosamigos\fileupload\FileUpload;
 use frontend\widgets\postslist\Postslist;
+//use frontend\widgets\commentslist\Commentslist;
 ?>
 <div class="row">
     <div class="col-md-3">

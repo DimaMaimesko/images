@@ -53,6 +53,8 @@ return [
                'profile/<nickname:\w+>' => 'user/profile/view', 
                'subscribe/<id:\d+>' => 'user/profile/subscribe', 
                'unsubscribe/<id:\d+>' => 'user/profile/unsubscribe', 
+               'comments/<postId:\d+>' => 'post/comments/comment-form-view', 
+               'edit/<postId:\d+>/<commentId:\d+>' => 'post/comments/edit', 
             ],
         ],
         'redis' => [
