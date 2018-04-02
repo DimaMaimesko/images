@@ -8,8 +8,7 @@ use yii\helpers\Html;
 use frontend\modules\user\models\forms\PictureForm;
 use yii\web\UploadedFile;
 use yii\web\Response;
-use frontend\models\Images;
-use frontend\models\UploadForm;
+
 /**
  * Description of ProfileController
  *
@@ -39,7 +38,7 @@ class ProfileController extends Controller {
 //                                ]);  
 //                        }
 //                    }
-        
+       
          $modelPicture = new PictureForm();
          $user = $this->findUser($nickname);
          $isFollower = $this->isFollower($user);

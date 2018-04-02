@@ -248,7 +248,14 @@ class User extends ActiveRecord implements IdentityInterface
        $setOfFollowers = $redis->executeCommand('smembers', ['user:'.$this->getId().':followers']);
        return User::find()->select('id,username,nickname')->where(['id' => $setOfFollowers])->orderBy('username')->asArray()->all();
     }
-    public function getNumberOfFollowers()
+    
+    public static function getIdOfFollowers()
+    {
+       $redis = Yii::$app->redis;
+       return  $redis->executeCommand('smembers', ['user:'.Yii::$app->user->id.':followers']);
+    }
+    
+    public  function getNumberOfFollowers()
     {
        $redis = Yii::$app->redis;
        return $redis->executeCommand('scard', ['user:'.$this->getId().':followers']);

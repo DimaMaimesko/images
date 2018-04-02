@@ -9,7 +9,10 @@
 namespace frontend\modules\post\models;
 use Yii;
 use yii\base\Model;
+use frontend\modules\post\models\Post;
+use frontend\models\User;
 use Intervention\Image\ImageManager;
+use frontend\models\events\PostCreatedEvent;
 /**
  * Description of post-form-model
  *
@@ -19,6 +22,10 @@ class PostFormModel extends Model{
     
     public  $photo;
     public  $content;
+    public $user;
+   
+    
+    const EVENT_POST_CREATED = 'post_created';
     
      public function rules()
     {
@@ -34,10 +41,14 @@ class PostFormModel extends Model{
         ];
     }
     
-    public function __construct()
+    public function __construct(User $user)
     {
+        $this->user = $user;
         $this->on(self::EVENT_AFTER_VALIDATE, [$this, 'resizePicture']);//определяем обработчик события After Validate как метод текущего класса resizePicture
+       // $this->on(self::EVENT_POST_CREATED, [Yii::$app->FeedService, 'addToFeeds'],$this->user->id);
+        $this->on(self::EVENT_POST_CREATED, [Yii::$app->FeedService, 'addToFeeds']);
     }
+    
     
     /**
      * Resize image if needed
@@ -75,8 +86,25 @@ class PostFormModel extends Model{
         return Yii::$app->params['maxFileSize'];
     }
     
-    public function save()
-    {
-        return 0;
+    public function save() {
+        if ($this->validate()) {//так же выполнится событие EVENT_AFTER_VALIDATE 
+            $post = new Post();
+            $array = Yii::$app->storage->saveUploadedFile($this->photo, $this->user->id); //  id/ae/a7/8ea26ed7edb60db42d574eb5f4cd6c0deb78.jpg
+            $post->photo = $array['fName'];
+            $post->content = $this->content;
+            $post->user_id = $this->user->id;
+            
+            if ($post->save(false)) {  
+                Yii::$app->session->setFlash('success', 'Photo posted');
+                $event = new PostCreatedEvent();
+                $event->user = $this->user;
+                $event->post = $post;
+                $this->trigger(self::EVENT_POST_CREATED, $event);
+                return true;
+            } else {
+                Yii::$app->session->setFlash('danger', 'Error occured while posting');
+                return false;
+            }
+        }
     }
 }

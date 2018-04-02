@@ -13,39 +13,26 @@ class DefaultController extends Controller
 {
    
     
-    public function actionCreate()
-{
+    public function actionCreate() {
         if (Yii::$app->user->isGuest) {
             return $this->redirect(['/user/default/login']);
         }
-        $model = new PostFormModel();
-   
-        if ($model->load(Yii::$app->request->post())) {
-        
-        $model->photo = UploadedFile::getInstance($model, 'photo');
-        if ($model->validate()) {//так же выполнится событие EVENT_AFTER_VALIDATE 
-            // form inputs are valid, do something here
-             $user = Yii::$app->user->identity;
-             $post = new Post();
-             $array = Yii::$app->storage->saveUploadedFile($model->photo,$user->id);//  id/ae/a7/8ea26ed7edb60db42d574eb5f4cd6c0deb78.jpg
-            $post->photo = $array['fName']; 
-            $post->content = $model->content;
-            $post->user_id = $user->id;
-            if ($post->save(false)){ // save(false, ['picture']) - валидацию проводить не требуется а так же сохраняем только атрибут picture 
-               Yii::$app->session->setFlash('success', 'Photo posted');
-            }else{
-               Yii::$app->session->setFlash('danger', 'Error occured while posting');
-            } 
-            
-             return $this->redirect(['/user/profile/view','nickname' => $user->getNickname()]);
-        }
-    }
-    return $this->render('PostFormView', [
-        'model' => $model,
-    ]);
-}
+        $model = new PostFormModel(Yii::$app->user->identity);
 
-public function actionLike()
+        if ($model->load(Yii::$app->request->post())) {
+
+            $model->photo = UploadedFile::getInstance($model, 'photo');
+            if ($model->save()) {//так же выполнится событие EVENT_AFTER_VALIDATE 
+                return $this->redirect(['/user/profile/view','nickname' =>Yii::$app->user->id]);
+            } 
+        }
+        
+        return $this->render('PostFormView', [
+                    'model' => $model,
+        ]);
+    }
+
+    public function actionLike()
 {
      if (Yii::$app->user->isGuest) {
             return $this->redirect(['/user/default/login']);
