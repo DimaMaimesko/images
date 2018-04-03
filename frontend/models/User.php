@@ -6,7 +6,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
-
+use frontend\modules\post\models\Feed;
 /**
  * User model
  *
@@ -294,5 +294,20 @@ class User extends ActiveRecord implements IdentityInterface
         }
         return false;
     }
+    /**
+     * Get data for newsfeed
+     * @param type $limit
+     * @return type array
+     */
+     public  function getMyFeed($limit)
+    {
+       return  $this->hasMany(Feed::className(), ['user_id' => 'id'])
+                    ->asArray()
+                    ->orderBy(['post_created_at' => SORT_DESC])
+                    ->limit($limit)
+                    ->all();
+        
+    }
+     
     
 }

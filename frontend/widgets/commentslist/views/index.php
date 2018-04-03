@@ -7,16 +7,19 @@
 use common\widgets\Alert;
 use frontend\modules\post\models\Post;
 use frontend\models\User;
+use frontend\modules\post\models\Comment;
 use yii\helpers\Url;
 
 ?>
 <?= Alert::widget() ?>
-
+ 
 <hr>
 <p style="font-size:75%" class="text-right"><em><?php if ($currentPost['created_at'])echo date('Y-m-d H:i',$currentPost['created_at']); ?></em></p>
 <?php echo $currentPost['content']; ?>
 <br>
+<a  href="<?php echo Url::to(['/post/comments/comment-form-view','postId' => $currentPost['id']]);; ?>">
 <img src="/uploads/resized/<?php echo $currentPost['photo']; ?>" id="profile-picture" style="max-width: 50%" class="center-block">
+</a>
 <hr>
 
 <button type="button" class="btn btn-primary btn-xs btn-like <?php echo (('user-id:'.$currentUserId) && (Post::isLiked($currentPost['id'], $currentUserId)))? "display-none" : ""; ?>" data-id="<?php echo $currentPost['id']; ?>">
@@ -29,7 +32,7 @@ use yii\helpers\Url;
     
     <a class="btn btn-default btn-xs" href="<?php echo Url::to(['/post/comments/comment-form-view','postId' => $currentPost['id']]); ?>" role="button">
     <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-     Comments...</a>
+    Comments... <span class="count-like badge"><?php echo Comment::countComments($currentPost['id']); ?></span></a>
 <?php foreach ($comments as $comment):  ?>
      <hr> 
      <?php echo User::findUserNameBy($comment['user_id']);  ?>

@@ -4,6 +4,8 @@ namespace frontend\controllers;
 
 use yii\web\Controller;
 use frontend\models\User;
+//use frontend\modules\post\models\Feed;
+use Yii;
 /**
  * Site controller
  */
@@ -28,10 +30,24 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $users = User::find()->all();
+        $limit = Yii::$app->params['feedPostLimit'];
+        if (!Yii::$app->user->isGuest){
+            /* @var $currentUser User */
+            $currentUser = Yii::$app->user->identity;
+            $myFeeds = $currentUser->getMyFeed($limit);
+                     
+        }else{
+            $myFeeds = NULL;
+            $currentUser = NULL;
+        }
         
+       
+        $users = User::find()->all();
         return $this->render('index',[
             'users' => $users,
+            'myFeeds' => $myFeeds,
+            'limit' => $limit,
+            'currentUser' => $currentUser,
         ]);
     }
    

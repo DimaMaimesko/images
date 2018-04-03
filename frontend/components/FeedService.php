@@ -28,6 +28,7 @@ class FeedService extends Component{
             $feedItem->author_nickname = $user->getNickname();
             $feedItem->author_picture = $user->getPicture();
             $feedItem->post_id = $post->id;
+            $feedItem->post_filename = $post->photo;
             $feedItem->post_description = $post->content;
             $feedItem->post_created_at = $post->created_at;
             $feedItem->save();

@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
 
       
        
-       <?= Html::activeTextarea($model, 'content',['value' => $content,'cols'=>'100', 'rows'=>'5']) ?>
+       <?= Html::activeTextarea($model, 'content',['value' => $model->content,'cols'=>'100', 'rows'=>'5']) ?>
     
         <div class="form-group">
            

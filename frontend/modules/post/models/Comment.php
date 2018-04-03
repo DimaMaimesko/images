@@ -57,4 +57,24 @@ class Comment extends \yii\db\ActiveRecord
        //print_r($postId); die;
         return  $comments;
     }
+    
+     public function addComment($postId,$currentUserId)
+    {
+      $redis = Yii::$app->redis;
+      return $redis->executeCommand('rpush', ['ccomment-post-id:'.$postId, 'user-id:'.$currentUserId]);//set содержит юзеров, лайкнувших пост
+          
+    }
+    public  function delComment($postId,$currentUserId)
+    {
+      $redis = Yii::$app->redis;
+      return $redis->executeCommand('rpop', ['ccomment-post-id:'.$postId]);//set содержит юзеров, лайкнувших пост
+    }
+   
+    public static function countComments($postId)
+    {
+      $redis = Yii::$app->redis;
+      return  $redis->executeCommand('llen', ['ccomment-post-id:'.$postId]);
+      
+    }
+    
 }

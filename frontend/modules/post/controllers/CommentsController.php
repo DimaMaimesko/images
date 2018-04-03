@@ -4,7 +4,7 @@ namespace frontend\modules\post\controllers;
 use yii\web\Controller;
 use frontend\modules\post\models\Comment;
 use Yii;
-
+ 
 
 class CommentsController extends Controller {
 
@@ -23,6 +23,7 @@ class CommentsController extends Controller {
             $model->status = 1;
             if ($model->validate() && $model->save ())  {
                 // form inputs are valid, do something here
+               $model->addComment($postId, Yii::$app->user->identity->id);
                Yii::$app->session->setFlash('success', 'Your comment is posted!');
                return $this->refresh();
             }
@@ -38,7 +39,7 @@ class CommentsController extends Controller {
             Yii::$app->session->setFlash('info', 'You need login first!');
             return $this->redirect(['/user/default/login']);
         }
-
+$model = new Comment();
         $model = Comment::findOne($commentId);
         if ($model->load(Yii::$app->request->post())) {
             $model->created_at = time();
@@ -72,10 +73,11 @@ class CommentsController extends Controller {
             Yii::$app->session->setFlash('info', 'You need login first!');
             return $this->redirect(['/user/default/login']);
         }
-
+$model = new Comment();
         $model = Comment::findOne($commentId);
-        if ($model->delete()) {
+        if ($model && $model->delete()) {
                 // form inputs are valid, do something here
+                $model->delComment($postId, Yii::$app->user->identity->id);
                 Yii::$app->session->setFlash('success', 'Your comment was deleted!');
                 return $this->render('commentFormView', [
                             'model' => $model,
@@ -83,10 +85,8 @@ class CommentsController extends Controller {
                 ]);
         }
      
-        return $this->render('commentEdit', [
-                    'model' => $model,
-                    'content' => $model->content,
-        ]);
+        return $this->goHome();
+         
        
     }
 
