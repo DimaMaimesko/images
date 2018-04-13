@@ -9,10 +9,7 @@ use frontend\widgets\commentslist\Commentslist;
 /* @var $form ActiveForm */
 
 ?>
-<div style="border: 3px dotted greenyellow; padding: 5px; margin: 5px;">
-            <?php echo Commentslist::widget(['post_id' => $postId,]);//$user->id - это id пользователя профайл которого мы сейчас просматриваем  ?>  
-        </div>
-<div class="frontend-modules-post-views-commentFormView">
+
 
     <?php $form = ActiveForm::begin(); ?>
 
@@ -23,7 +20,10 @@ use frontend\widgets\commentslist\Commentslist;
             <?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
         </div>
     <?php ActiveForm::end(); ?>
-
+<div style="border: 3px dotted greenyellow; padding: 5px; margin: 5px;">
+            <?php echo Commentslist::widget(['post_id' => $postId,]);//$user->id - это id пользователя профайл которого мы сейчас просматриваем  ?>  
+        </div>
+<div class="frontend-modules-post-views-commentFormView">
 </div><!-- frontend-modules-post-views-commentFormView -->
 
   

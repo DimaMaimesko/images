@@ -31,25 +31,67 @@ $this->title = 'My Yii Application';
                 <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
             </div>
             <div class="col-lg-8">
-                <h2>My feed</h2>
+                
+                                  
+                       
+                                
+                                    <!-- feed item -->
+                                    <article class="post col-sm-12 col-xs-12">                                            
+                                        <div class="post-meta">
+                                            <div class="post-title">
+                                                <img src="/img/demo/avatar.jpg" class="author-image" />
+                                                <div class="author-name"><a href="#">Firstname Lastname</a></div>
+                                            </div>
+                                        </div>
+                                        <div class="post-type-image">
+                                            <a href="#">
+                                                <img src="/img/demo/car.jpg" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="post-description">
+                                            <p>Lorem ipsum dolor sit amet, iisque bonorum consequat an vis, ea dico sonet dolorum eam, 
+                                                oblique lucilius consequat mel ei.</p>
+                                        </div>
+                                        <div class="post-bottom">
+                                            <div class="post-likes">
+                                                <a href="#" class="btn btn-secondary"><i class="fa fa-lg fa-heart-o"></i></a>
+                                                <span>6 Likes</span>
+                                            </div>
+                                            <div class="post-comments">
+                                                <a href="#">6 Comments</a>
 
-               
+                                            </div>
+                                            <div class="post-date">
+                                                <span>Jan 14, 2016</span>    
+                                            </div>
+                                            <div class="post-report">
+                                                <a href="#">Report post</a>    
+                                            </div>
+                                        </div>
+                                    </article>
+                                    <!-- feed item -->
+      
+                <h2>My feed</h2>
+                              
                 <?php if ($myFeeds): ?>
                     <?php foreach ($myFeeds as $oneFeed): ?>
                         <hr> 
+                                              
                         <div class="col-md-12 bg-warning">
                             <img src="<?php echo $oneFeed['author_picture']; ?>" width="40" height="40" class="img-circle" />
+                            <div class="author-name">
                             <a href="<?php echo Url::to(['/user/profile/view', 'nickname' => ($oneFeed['author_nickname']) ? $oneFeed['author_nickname'] : $oneFeed['author_id']]); ?>">
                                 <?php echo Html::encode($oneFeed['author_nickname']); ?>
                             </a>
-                             <?php echo " (" . Html::encode($oneFeed['author_name']) . ")"; ?>
+                            </div >   
+                            <?php echo " (" . Html::encode($oneFeed['author_name']) . ")"; ?>
                         </div>
                         <hr>
                         <p style="font-size:75%" class="text-right"><em><?php if ($oneFeed['post_created_at']) echo date('Y-m-d H:i', $oneFeed['post_created_at']); ?></em></p>
                         <?php echo $oneFeed['post_description']; ?>
                         <br>
                         <a href="<?php echo Url::to(['/post/comments/comment-form-view', 'postId' => $oneFeed['post_id']]); ?>">
-                        <img src="/uploads/resized/<?php echo $oneFeed['post_filename']; ?>" id="profile-picture" style="max-width: 50%" class="center-block">
+                            <img src="/uploads/resized/<?php echo $oneFeed['post_filename']; ?>" id="profile-picture" style="max-width: 50%" class="center-block">
                         </a>
                         <hr>
 

@@ -7,6 +7,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 use frontend\modules\post\models\Feed;
+use frontend\modules\post\models\Post;
 /**
  * User model
  *
@@ -204,9 +205,10 @@ class User extends ActiveRecord implements IdentityInterface
     
     public function getNickname()
     {
-        if ($this->nickname){
-            return $this->nickname;
-        }return $this->getId();
+//        if ($this->nickname){
+//            return $this->nickname;
+//        }return $this->getId();
+        return ($this->nickname)? ($this->nickname):($this->getId());
     }
     
     public function findUserById($id)
@@ -307,6 +309,10 @@ class User extends ActiveRecord implements IdentityInterface
                     ->limit($limit)
                     ->all();
         
+    }
+    public static function countUserPosts($id){
+        $post = new Post();
+        return $post->find()->where(['user_id' => $id])->count();
     }
      
     

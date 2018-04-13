@@ -23,13 +23,18 @@
         "yiisoft/yii2-redis": "^2.0@dev",
         "2amigos/yii2-file-upload-widget": "~1.0",
         "intervention/image": "^2.3@dev",
-        "calcinai/php-imagick": "dev-master"
+        "calcinai/php-imagick": "dev-master",
+        "bower-asset/font-awesome": "4.4.0",
+        "phpunit/phpunit": "6.5.x-dev",
+        "codeception/codeception": "2.4.x-dev",
+        "codeception/specify": "^1.0",
+        "codeception/verify": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
         "yiisoft/yii2-gii": "~2.0.0",
         "codeception/base": "^2.2.3",
-        "codeception/verify": "~0.3.1"
+        "predis/predis": "^2.0@dev"
     },
     "config": {
         "process-timeout": 1800,

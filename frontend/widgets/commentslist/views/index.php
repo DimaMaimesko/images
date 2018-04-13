@@ -1,4 +1,4 @@
-<?php
+ <?php
 /* @var $postsList frontend\modules\post\models\Post; */
 
 //use yii\helpers\Html;
@@ -11,7 +11,7 @@ use frontend\modules\post\models\Comment;
 use yii\helpers\Url;
 
 ?>
-<?= Alert::widget() ?>
+
  
 <hr>
 <p style="font-size:75%" class="text-right"><em><?php if ($currentPost['created_at'])echo date('Y-m-d H:i',$currentPost['created_at']); ?></em></p>
@@ -33,6 +33,13 @@ use yii\helpers\Url;
     <a class="btn btn-default btn-xs" href="<?php echo Url::to(['/post/comments/comment-form-view','postId' => $currentPost['id']]); ?>" role="button">
     <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
     Comments... <span class="count-like badge"><?php echo Comment::countComments($currentPost['id']); ?></span></a>
+    
+    <a class="btn btn-default btn-xs btn-report <?php echo Post::isUserReported($currentPost['id']) ? ("display-none") : (""); ?>"  role="button"   post-id="<?php echo $currentPost['id']; ?>">
+    <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+    Report abuse
+    <i class="fa fa-cog fa-spin fa-fw icon-preloader" style="display:none"></span></a>
+    
+ 
 <?php foreach ($comments as $comment):  ?>
      <hr> 
      <?php echo User::findUserNameBy($comment['user_id']);  ?>
@@ -41,7 +48,7 @@ use yii\helpers\Url;
      <?php if ($currentUserId === $comment['user_id']): ?>
         <a type="button" class="btn btn-default btn-xs" 
            href="<?php echo Url::to(['/post/comments/edit','postId' => $currentPost['id'],'commentId' => $comment['id']]); ?>"
-            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            <span style="visibility:hidden" class="glyphicon glyphicon-refresh spinning"></span>
             Edit
          </a>
      <?php endif;  ?>

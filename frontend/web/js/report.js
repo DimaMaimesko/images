@@ -1,41 +1,22 @@
 $(document).ready(function(){
     
-    $('.btn-like').click(function(){
+    
+     $('.btn-report').click(function(){
+         var button = $(this);
+         var preloader = $(this).find('i.icon-preloader');
         var params = {
-          'id': $(this).attr('data-id')  
+          'postId': $(this).attr('post-id')  
         };
-        $.post('/post/default/like',params, function(data){
+        preloader.show();
+        $.post('/post/comments/report',params, function(data){
+            preloader.hide();
             console.log(data);
             if (data.success === true){
-                $(".btn-like[data-id='"+data.id+"']").hide();
-                $(".btn-dislike[data-id='"+data.id+"']").show();
-                
-                $(".btn-like[data-id='"+data.id+"'] span.count-like").html(data.countLikes);
-                $(".btn-dislike[data-id='"+data.id+"'] span.count-dislike").html(data.countLikes);
-                
+                  $(".btn-report").text('Already reported');
             }
         });
         return false;
     });
-    
-    $('.btn-dislike').click(function(){
-        var params = {
-          'id': $(this).attr('data-id')  
-        };
-        $.post('/post/default/dis-like',params, function(data){
-            console.log(data);
-            if (data.success === true){
-                $(".btn-like[data-id='"+data.id+"']").show();
-                $(".btn-dislike[data-id='"+data.id+"']").hide();
-                
-                $(".btn-dislike[data-id='"+data.id+"'] span.count-dislike").html(data.countLikes);
-                $(".btn-like[data-id='"+data.id+"'] span.count-like").html(data.countLikes);
-            }
-        });
-        return false;
-    });
-    
-    
     
 //    $('#modalEditComment').on('show.bs.modal', function (event) {
 //        var button = $(event.relatedTarget); // Button that triggered the modal
@@ -70,4 +51,6 @@ $(document).ready(function(){
 //    });
     
 });
+
+
 

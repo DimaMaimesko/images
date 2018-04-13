@@ -57,7 +57,7 @@ class Post extends \yii\db\ActiveRecord
     
     public function getUserPosts($id)
     {
-        return $this->find()->where(['user_id'=>$id])->asArray()->all();
+        return $this->find()->where(['user_id'=>$id])->asArray()->orderBy(['created_at' => SORT_DESC])->all();
     }
     
     public function getUserIdBy($postId)
@@ -128,5 +128,34 @@ class Post extends \yii\db\ActiveRecord
                 // 'value' => new Expression('NOW()'),
             ],
         ];
+    }
+    
+    public static function makeReport($postId)
+    {
+        $redis = Yii::$app->redis;
+        $currentUserId = Yii::$app->user->identity->id;
+        
+        return $redis->executeCommand('sadd', ['post:'.$postId.':reports', 'user:'.$currentUserId]);//set содержит юзеров,репортнувших пост
+    }
+    
+    public static function countReports($postId)
+    {
+        $redis = Yii::$app->redis;
+        return $redis->executeCommand('scard', ['post:'.$postId.':reports']);
+    }
+    
+    public static function isUserReported($postId)
+    {
+        $redis = Yii::$app->redis;
+        $currentUserId = Yii::$app->user->identity->id;
+        return $redis->executeCommand('sismember', ['post:'.$postId.':reports', 'user:'.$currentUserId]);
+    }
+    
+    public static function updateReports($postId,$numberOfReports)
+    {
+        $post = Post::findOne($postId);
+        $post->report = $numberOfReports;
+        $post->update();
+        
     }
 }

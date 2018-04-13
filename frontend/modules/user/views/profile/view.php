@@ -8,11 +8,12 @@ use yii\helpers\HtmlPurifier;
 use yii\helpers\Url;
 use dosamigos\fileupload\FileUpload;
 use frontend\widgets\postslist\Postslist;
+use frontend\models\User;
 //use frontend\widgets\commentslist\Commentslist;
 ?>
 <div class="row">
     <div class="col-md-3">
-        <h3>Your posts:</h3>
+        <h3>User posts(<?php echo User::countUserPosts($user->id); ?>):</h3>
         <div style="border: 3px dotted greenyellow; padding: 5px; margin: 5px;">
             <?php echo Postslist::widget(['id' => $user->id]);//$user->id - это id пользователя профайл которого мы сейчас просматриваем  ?>  
         </div>
@@ -145,7 +146,27 @@ use frontend\widgets\postslist\Postslist;
     <?php if (Yii::$app->user->id ==$user->id): ?>
         <a href="<?= Url::to(['/post/default/create', 'id' => $user->getId()]); ?>" class="btn btn-warning center-block">Create post...</a>   
     <?php endif; ?>
-    </div>
+   
+     <div class="col-sm-12 col-xs-12">
+                                        <div class="row profile-posts">
+                                            <div class="col-md-4 profile-post">
+                                                <a href="#"><img src="/img/demo/car.jpg" class="author-image" /></a>
+                                            </div>
+                                            <div class="col-md-4 profile-post">
+                                                <a href="#"><img src="/img/demo/car.jpg" class="author-image" /></a>
+                                            </div>
+                                            <div class="col-md-4 profile-post">
+                                                <a href="#"><img src="/img/demo/car.jpg" class="author-image" /></a>
+                                            </div>
+                                            <div class="col-md-4 profile-post">
+                                                <a href="#"><img src="/img/demo/car.jpg" class="author-image" /></a>
+                                            </div>
+                                            <div class="col-md-4 profile-post">
+                                                <a href="#"><img src="/img/demo/car.jpg" class="author-image" /></a>
+                                            </div>
+                                        </div>
+                                    </div>
+     </div>
     <div class="col-md-3"></div>
 </div>
 

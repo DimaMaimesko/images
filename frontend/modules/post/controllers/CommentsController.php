@@ -4,6 +4,7 @@ namespace frontend\modules\post\controllers;
 use yii\web\Controller;
 use frontend\modules\post\models\Comment;
 use Yii;
+use frontend\modules\post\models\Post;
  
 
 class CommentsController extends Controller {
@@ -39,7 +40,7 @@ class CommentsController extends Controller {
             Yii::$app->session->setFlash('info', 'You need login first!');
             return $this->redirect(['/user/default/login']);
         }
-$model = new Comment();
+        $model = new Comment();
         $model = Comment::findOne($commentId);
         if ($model->load(Yii::$app->request->post())) {
             $model->created_at = time();
@@ -68,26 +69,52 @@ $model = new Comment();
 //          
 //              ];
     }
-     public function actionDelete($postId, $commentId) {
+
+    public function actionDelete($postId, $commentId) {
         if (Yii::$app->user->isGuest) {
             Yii::$app->session->setFlash('info', 'You need login first!');
             return $this->redirect(['/user/default/login']);
         }
-$model = new Comment();
+        $model = new Comment();
         $model = Comment::findOne($commentId);
         if ($model && $model->delete()) {
-                // form inputs are valid, do something here
-                $model->delComment($postId, Yii::$app->user->identity->id);
-                Yii::$app->session->setFlash('success', 'Your comment was deleted!');
-                return $this->render('commentFormView', [
-                            'model' => $model,
-                            'postId' => $postId,
-                ]);
+            // form inputs are valid, do something here
+            $model->delComment($postId, Yii::$app->user->identity->id);
+            Yii::$app->session->setFlash('success', 'Your comment was deleted!');
+            return $this->render('commentFormView', [
+                        'model' => $model,
+                        'postId' => $postId,
+            ]);
         }
-     
+
         return $this->goHome();
-         
-       
     }
+    
+    public function actionReport()
+{
+    if (Yii::$app->user->isGuest) {
+            return $this->redirect(['/user/default/login']);
+        }
+     Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+     $postId = Yii::$app->request->post('postId'); 
+     if(Post::makeReport($postId)){
+        
+         $numberOfReports = Post::countReports($postId);
+         Post::updateReports($postId,$numberOfReports);
+         return [
+         'success' => true,
+         'postId' => $postId,
+         'numberOfReports' => $numberOfReports,
+              ];
+     }else{
+          return [
+         'success' => false,
+         'postId' => $postId,
+        
+              ];
+     }
+         
+   
+}
 
 }

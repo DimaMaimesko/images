@@ -53,7 +53,7 @@ class Comment extends \yii\db\ActiveRecord
     
     public static function getCommentsBy($postId)
     {
-        $comments = Comment::find()->where(['post_id' => $postId])->all();
+        $comments = Comment::find()->where(['post_id' => $postId])->orderBy(['created_at' => SORT_DESC])->all();
        //print_r($postId); die;
         return  $comments;
     }

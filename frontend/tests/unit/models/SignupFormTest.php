@@ -1,59 +1,66 @@
 <?php
-namespace frontend\tests\unit\models;
-
-use common\fixtures\UserFixture;
-use frontend\models\SignupForm;
-
+namespace frontend\tests\models;
+use frontend\tests\fixtures\UserFixture;
 class SignupFormTest extends \Codeception\Test\Unit
 {
     /**
      * @var \frontend\tests\UnitTester
      */
     protected $tester;
-
-
-    public function _before()
+     public function _fixtures()
     {
-        $this->tester->haveFixtures([
-            'user' => [
-                'class' => UserFixture::className(),
-                'dataFile' => codecept_data_dir() . 'user.php'
-            ]
-        ]);
+        return ['users' => UserFixture::className()];
+       
+    }
+    protected function _before()
+    {
     }
 
-    public function testCorrectSignup()
+    protected function _after()
     {
-        $model = new SignupForm([
-            'username' => 'some_username',
-            'email' => 'some_email@example.com',
+    }
+
+    // tests
+    public function testTrimUsername()
+    {
+        $model = new \frontend\modules\user\models\SignupForm([
+            'username' => '  some_user ',
+            'email' => 'some_email@gmail.com',
             'password' => 'some_password',
         ]);
+        $model->signup();
+        expect($model->username)->equals('some_user');
 
-        $user = $model->signup();
-
-        expect($user)->isInstanceOf('common\models\User');
-
-        expect($user->username)->equals('some_username');
-        expect($user->email)->equals('some_email@example.com');
-        expect($user->validatePassword('some_password'))->true();
     }
-
-    public function testNotCorrectSignup()
+    public function testRequiredUsername()
     {
-        $model = new SignupForm([
-            'username' => 'troy.becker',
-            'email' => 'nicolas.dianna@hotmail.com',
+        $model = new \frontend\modules\user\models\SignupForm([
+            'username' => '',
+            'email' => 'some_email@gmail.com',
             'password' => 'some_password',
         ]);
-
-        expect_not($model->signup());
-        expect_that($model->getErrors('username'));
-        expect_that($model->getErrors('email'));
-
-        expect($model->getFirstError('username'))
-            ->equals('This username has already been taken.');
-        expect($model->getFirstError('email'))
-            ->equals('This email address has already been taken.');
-    }
+        $model->signup();
+        expect($model->getFirstError('username'))->equals('Username cannot be blank.');
+   }
+    public function testTooShortUsername()
+    {
+        $model = new \frontend\modules\user\models\SignupForm([
+            'username' => '2',
+            'email' => 'some_email@gmail.com',
+            'password' => 'some_password',
+        ]);
+        $model->signup();
+        expect($model->getFirstError('username'))->equals('Username should contain at least 2 characters.');
+   }
+    public function testUniqueEmail()
+    {
+        $model = new \frontend\modules\user\models\SignupForm([
+            'username' => '2vcb',
+            'email' => 'dima.maimesko@gmail.com',
+            'password' => 'some_password',
+        ]);
+        $model->signup();
+        expect($model->getFirstError('email'))->equals('This email address has already been taken.');
+   }
+   
 }
