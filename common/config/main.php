@@ -9,5 +9,8 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+         'storage' => [
+            'class' => 'frontend\components\Storage',
+        ],
     ],
 ];
