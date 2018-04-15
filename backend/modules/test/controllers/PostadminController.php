@@ -8,6 +8,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use frontend\modules\post\models\Feed;
 
 /**
  * PostadminController implements the CRUD actions for Post model.
@@ -84,5 +85,31 @@ class PostadminController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+    /**
+     * Approve post in case it looks OK
+     * @param type $id
+     * @return type
+     */
+      public function actionApprove($id)
+    {
+       $post = $this->findModel($id);
+       if ($post->approve())
+       {
+           Yii::$app->session->setFlash('success','Post marked as approved');
+           return $this->redirect(['index']);
+       }
+    }
+    
+      public function actionDelete($id)
+    {
+        $post = $this->findModel($id);  
+        if ($post->deletePost($id)){
+             Yii::$app->session->setFlash('success','Post has been deleted');
+             return $this->redirect(['index']);
+        }  
+       Yii::$app->session->setFlash('danger','ERROR!!!');
+             return $this->redirect(['index']);
+      
     }
 }

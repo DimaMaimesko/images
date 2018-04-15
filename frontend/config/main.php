@@ -57,12 +57,6 @@ return [
                'edit/<postId:\d+>/<commentId:\d+>' => 'post/comments/edit', 
             ],
         ],
-        'redis' => [
-            'class' => 'yii\redis\Connection',
-            'hostname' => 'localhost',
-            'port' => 6379,
-            'database' => 0,
-        ],
        
         'FeedService' => [
             'class' => 'frontend\components\FeedService',

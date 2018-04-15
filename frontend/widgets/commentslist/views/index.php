@@ -37,7 +37,7 @@ use yii\helpers\Url;
     <a class="btn btn-default btn-xs btn-report <?php echo Post::isUserReported($currentPost['id']) ? ("display-none") : (""); ?>"  role="button"   post-id="<?php echo $currentPost['id']; ?>">
     <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
     Report abuse
-    <i class="fa fa-cog fa-spin fa-fw icon-preloader" style="display:none"></span></a>
+    <i class="fa fa-cog fa-spin fa-fw icon-preloader" style="display:none"></i></a>
     
  
 <?php foreach ($comments as $comment):  ?>

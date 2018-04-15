@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Approve', ['approve', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -32,8 +32,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'user_id',
             'caption',
             'content:ntext',
-            'photo',
-            'created_at',
+            [
+              'attribute' => 'photo',
+              'format' => 'raw',
+              'label' => 'Photo',
+              'value' => function($post){
+                    /*@var $post \backend\models\Post */
+                     return Html::img($post->getImage(),['width' => '400px']);  
+              },
+            ],
+            'created_at:datetime',
             'status',
             'report',
         ],

@@ -1,8 +1,8 @@
 <?php
 
 namespace backend\models;
-
-
+use Yii;
+use frontend\modules\post\models\Feed;
 /**
  * This is the model class for table "post".
  *
@@ -44,6 +44,34 @@ class Post extends \yii\db\ActiveRecord
     public static function findComplaints()
     {
         return self::find()->where('report > 0')->orderBy('report DESC');
+        
+    }
+    public function getImage()
+    {
+        return Yii::$app->storage->getFile($this->photo);
+        
+    }
+    
+    public function approve()
+    {
+      /* @var $redis Connection*/  
+       $redis = Yii::$app->redis;
+       $key = "post:{$this->id}:reports";
+       $redis->del($key);
+       $this->report = 0;
+       return $this->save(false,['report']);
+    }
+    
+    public  function deletePost($postId)
+    {
+        $post = Post::findOne($postId);
+        $redis = Yii::$app->redis;
+        $key = "post:{$postId}:reports";
+          $keyLikes = "post-id:{$postId}";
+          $redis->del($keyLikes);
+          $keyComments = "ccomment-post-id:{$postId}";
+          $redis->del($keyComments);
+        return ($post->delete() && Feed::delAllByPostId($postId) &&  $redis->del($key));
         
     }
     

@@ -32,12 +32,29 @@ $this->params['breadcrumbs'][] = $this->title;
             'user_id',
             'caption',
             'content:ntext',
-            'photo',
+            [
+              'attribute' => 'photo',
+              'format' => 'raw',
+              'label' => 'Photo',
+              'value' => function($post){
+                    /*@var $post \backend\models\Post */
+                     return Html::img($post->getImage(),['width' => '130px']);  
+              },
+            ],
             'created_at:datetime',
             //'status',
             'report',
             ['class' => 'yii\grid\CheckboxColumn'],
-            ['class' => 'yii\grid\ActionColumn', 'template' => '{view}']
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view}&nbsp;&nbsp;&nbsp;{approve}&nbsp;&nbsp;&nbsp;{delete}',
+                'buttons' => [
+                    'approve' => function ($url,$post){
+                        return Html::a('<span class="glyphicon glyphicon-ok"></span>',['approve','id'=>$post->id]);//ссылка ведет нас на экшин approve текущего контроллера идентификатором текущего поста
+                    }
+                ],
+                
+            ],
         ],
     ]); ?>
 </div>

@@ -101,11 +101,13 @@ class CommentsController extends Controller {
         
          $numberOfReports = Post::countReports($postId);
          Post::updateReports($postId,$numberOfReports);
-         return [
+              return [
          'success' => true,
          'postId' => $postId,
          'numberOfReports' => $numberOfReports,
-              ];
+              ]; 
+         
+       
      }else{
           return [
          'success' => false,

@@ -46,6 +46,10 @@ class Feed extends \yii\db\ActiveRecord
             'post_created_at' => 'Post Created At',
         ];
     }
+    public static function delAllByPostId($postId)
+    {
+      return  self::deleteAll(['post_id'=>$postId]);
+    }
     
    
 }

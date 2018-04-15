@@ -155,7 +155,7 @@ class Post extends \yii\db\ActiveRecord
     {
         $post = Post::findOne($postId);
         $post->report = $numberOfReports;
-        $post->update();
+        $post->update(false);
         
     }
 }
