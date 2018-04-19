@@ -43,6 +43,14 @@ FontAwesomeAsset::register($this);
                                 <li class="blog-search">
                                     <a href="#" title="Search"><i class="fa fa-search"></i></a>
                                 </li>
+                                <li>
+                                    <?= Html::beginForm(['/site/language']) ?>
+                                    
+                                    <?= Html::dropDownList('language',Yii::$app->language, ['en-US' => 'English', 'ru-RU' => 'Русский']) ?>
+                                    <?= Html::submitButton('Change') ?>
+                                    
+                                    <?= Html::endForm() ?>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -56,19 +64,21 @@ FontAwesomeAsset::register($this);
                   
                         <?php
                         $menuItems = [
-                            ['label' => 'Newsfeed', 'url' => ['/site/index']],
+                            ['label' => Yii::t('about', 'Newsfeed'), 'url' => ['/site/index']],
                         ];
                         if (!Yii::$app->user->isGuest) {
-                            $menuItems[] = ['label' => 'My page', 'url' => ['/user/profile/view', 'nickname' => Yii::$app->user->id]];
+                            $menuItems[] = ['label' => Yii::t('about', 'My page'), 'url' => ['/user/profile/view', 'nickname' => Yii::$app->user->id]];
                         }
                         if (Yii::$app->user->isGuest) {
-                            $menuItems[] = ['label' => 'Signup', 'url' => ['/user/default/signup']];
-                            $menuItems[] = ['label' => 'Login', 'url' => ['/user/default/login']];
+                            $menuItems[] = ['label' => Yii::t('about', 'Signup'), 'url' => ['/user/default/signup']];
+                            $menuItems[] = ['label' => Yii::t('about', 'Login'), 'url' => ['/user/default/login']];
                         } else {
                             $menuItems[] = '<li>'
                                     . Html::beginForm(['/user/default/logout'], 'post')
                                     . Html::submitButton(
-                                            'Logout (' . Yii::$app->user->identity->username . ') <i class="fa fa-sign-out"></i>', ['class' => 'btn btn-link logout']
+                                            Yii::t('about', 'Logout ({username})',[
+                                                'username' => Yii::$app->user->identity->username
+                                            ]) . '  <i class="fa fa-sign-out"></i>', ['class' => 'btn btn-link logout']
                                     )
                                     . Html::endForm()
                                     . '</li>';

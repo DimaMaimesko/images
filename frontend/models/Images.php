@@ -17,7 +17,7 @@ class Images extends Model{
      * @param type $height
      * @return type
      */
-    public static function resizeImage($image, $width=300, $height=300)
+    public static function resizeImage($image, $width=400, $height=400)
     {
         // create an image manager instance with favored driver
         $manager = new ImageManager(array('driver' => 'imagick'));

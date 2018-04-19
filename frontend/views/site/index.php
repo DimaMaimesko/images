@@ -34,42 +34,7 @@ $this->title = 'My Yii Application';
                 
                                   
                        
-                                
-                                    <!-- feed item -->
-                                    <article class="post col-sm-12 col-xs-12">                                            
-                                        <div class="post-meta">
-                                            <div class="post-title">
-                                                <img src="/img/demo/avatar.jpg" class="author-image" />
-                                                <div class="author-name"><a href="#">Firstname Lastname</a></div>
-                                            </div>
-                                        </div>
-                                        <div class="post-type-image">
-                                            <a href="#">
-                                                <img src="/img/demo/car.jpg" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="post-description">
-                                            <p>Lorem ipsum dolor sit amet, iisque bonorum consequat an vis, ea dico sonet dolorum eam, 
-                                                oblique lucilius consequat mel ei.</p>
-                                        </div>
-                                        <div class="post-bottom">
-                                            <div class="post-likes">
-                                                <a href="#" class="btn btn-secondary"><i class="fa fa-lg fa-heart-o"></i></a>
-                                                <span>6 Likes</span>
-                                            </div>
-                                            <div class="post-comments">
-                                                <a href="#">6 Comments</a>
-
-                                            </div>
-                                            <div class="post-date">
-                                                <span>Jan 14, 2016</span>    
-                                            </div>
-                                            <div class="post-report">
-                                                <a href="#">Report post</a>    
-                                            </div>
-                                        </div>
-                                    </article>
-                                    <!-- feed item -->
+                               
       
                 <h2>My feed</h2>
                               

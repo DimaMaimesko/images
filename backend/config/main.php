@@ -15,6 +15,9 @@ return [
         'test' => [
             'class' => 'backend\modules\test\Module',
         ],
+        'user' => [
+            'class' => 'backend\modules\user\Module',
+        ],
     ],
     'components' => [
         'request' => [
