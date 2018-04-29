@@ -27,7 +27,7 @@ class DefaultController extends Controller
             } 
         }
         
-        return $this->render('PostFormView', [
+        return $this->render('postFormView', [
                     'model' => $model,
         ]);
     }
