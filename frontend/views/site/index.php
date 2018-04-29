@@ -10,7 +10,7 @@ use Yii;
 /* @var $currentUser frontend\models\User */
 /* @var $myFeeds frontend\modules\post\models\User */
 
-$this->title = 'My Yii Application';
+$this->title = 'My Yii2 Application';
 ?>
 <div class="site-index">
 
