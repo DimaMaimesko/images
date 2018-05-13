@@ -19,6 +19,7 @@ class AppAsset extends AssetBundle
         'js/likes.js',
         'js/scripts.js',
         'js/report.js',
+        'js/ajaxtest.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

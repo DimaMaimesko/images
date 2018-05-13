@@ -12,7 +12,7 @@ use frontend\modules\user\models\PasswordResetRequestForm;
 use frontend\modules\user\models\ResetPasswordForm;
 use frontend\modules\user\models\SignupForm;
 use frontend\modules\user\components\AuthHandler;
-
+use frontend\models\User;
 
 /**
  * Default controller for the `user` module
@@ -62,6 +62,7 @@ class DefaultController extends Controller
         ];
     }
     
+    
      public function onAuthSuccess($client)
     {
         (new AuthHandler($client))->handle();
@@ -74,6 +75,8 @@ class DefaultController extends Controller
      */
     public function actionLogin()
     {
+        User::sessionClear();
+         
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -95,14 +98,17 @@ class DefaultController extends Controller
      *
      * @return mixed
      */
-public function actionLogout()
+    public function actionLogout()
     {
+        User::sessionClear();
+         
         $currentUser = Yii::$app->user->identity;
         Yii::$app->onLineUsers->removeUser($currentUser->id);
         Yii::$app->user->logout();
 
         return $this->goHome();
-    }    
+    }
+    
     /**
      * Signs user up.
      *
@@ -174,3 +180,4 @@ public function actionLogout()
     }
     
 }
+

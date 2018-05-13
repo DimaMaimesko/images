@@ -6,6 +6,7 @@ use yii\web\Controller;
 use frontend\modules\post\models\PostFormModel;
 use yii\web\UploadedFile;
 use frontend\modules\post\models\Post;
+use frontend\modules\post\models\Feed;
 /**
  * Default controller for the `post` module
  */
@@ -20,7 +21,7 @@ class DefaultController extends Controller
         $model = new PostFormModel(Yii::$app->user->identity);
 
         if ($model->load(Yii::$app->request->post())) {
-
+            
             $model->photo = UploadedFile::getInstance($model, 'photo');
             if ($model->save()) {//так же выполнится событие EVENT_AFTER_VALIDATE 
                 return $this->redirect(['/user/profile/view','nickname' =>Yii::$app->user->id]);
@@ -40,6 +41,7 @@ class DefaultController extends Controller
      Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
      $postId = Yii::$app->request->post('id'); //это id поста который мы лайкаем
      $currentUserId = Yii::$app->user->id;
+     
      if (Post::setLikeToPost($postId,$currentUserId))
      { 
          $usersWhoLikes = Post::getLikes($postId);
@@ -83,5 +85,22 @@ public function actionDisLike()
          }
 }
 
+public  function actionDeletePost($postId)
+    {
+          $post = Post::findOne($postId);
+          $redis = Yii::$app->redis;
+          $key = "post:{$postId}:reports";
+          $keyLikes = "post-id:{$postId}";
+          $redis->del($keyLikes);
+          $keyComments = "ccomment-post-id:{$postId}";
+          $redis->del($keyComments);
+          $post->delete();
+          Feed::delAllByPostId($postId);
+          $redis->del($key);
+          
+        return $this->goBack();
+    }
+
 
 }
+

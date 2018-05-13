@@ -8,7 +8,8 @@ use yii\helpers\Html;
 use frontend\modules\user\models\forms\PictureForm;
 use yii\web\UploadedFile;
 use yii\web\Response;
-
+use yii\web\Session;
+use frontend\modules\post\models\Post;
 /**
  * Description of ProfileController
  *
@@ -22,26 +23,13 @@ class ProfileController extends Controller {
     
     public function actionView($nickname)
     {
-//                    $model = new UploadForm;
-//                    if (Yii::$app->request->isPost){
-//                       
-//                        $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-//                        if ($model->upload()){
-//                             $modelPicture = new PictureForm();
-//                             $user = $this->findUser($nickname);
-//                             $isFollower = $this->isFollower($user);
-//                                return $this->render('view',[
-//                                'user' => $user,
-//                                'isFollower' => $isFollower,
-//                                'modelPicture' => $modelPicture,
-//                                'model' => $model,
-//                                ]);  
-//                        }
-//                    }
+
    $session = Yii::$app->session;
    $session->open();
-   $session->remove('stateUsers');  
-   $session->remove('stateFeeds');     
+   //$session->remove('stateUsers');
+   //$session->remove('stateFeeds');
+   $session->remove('statePosts');
+  
          $modelPicture = new PictureForm();
          $user = $this->findUser($nickname);
          $isFollower = $this->isFollower($user);
@@ -52,6 +40,45 @@ class ProfileController extends Controller {
            
         ]);
     }
+    
+    
+    public function actionAddPosts()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON; //теперь мы можем возвращать массив
+        if (Yii::$app->request->isPost) {
+            $targetUserId = Yii::$app->request->post('targetUserId');
+
+            $numberOfAllPosts = Post::countPosts($targetUserId);
+            $session = Yii::$app->session;
+            $session->open();
+            if ($session->has('statePosts')) {
+                $statePosts = $session->get('statePosts');
+                $statePosts += Yii::$app->params['postsToShow'];
+                $session->set('statePosts', $statePosts);
+                $limitPosts = $statePosts;
+            } else {
+                $session->set('statePosts', Yii::$app->params['postsToShow']);
+                if(($numberOfAllPosts >=3)){
+                     $session->set('statePosts', 6);
+                }
+                $limitPosts = $session->get('statePosts');
+            }
+
+            $posts = Post::getUserPostsWithLimit($targetUserId, $limitPosts);
+            
+            if ($limitPosts >= $numberOfAllPosts){
+                $limitPosts = $numberOfAllPosts;
+            } 
+
+            return ['success' => true,
+                    'posts' => $posts,
+                    'targetUserId' => $targetUserId,
+                    'limitPosts' => $limitPosts,
+                    'numberOfAllPosts' => $numberOfAllPosts,
+            ];
+        }
+    }
+
     /**
      * @param string $nickname
      * @return User
@@ -110,12 +137,11 @@ class ProfileController extends Controller {
     }
     
     public function actionUploadPicture()   //AJAX
-    {
-        if (Yii::$app->user->isGuest) {
+    {   if (Yii::$app->user->isGuest) {
             Yii::$app->session->setFlash('info', 'You need login first!');
             return $this->redirect(['/user/default/login']);
         }
-
+        
         Yii::$app->response->format = Response::FORMAT_JSON;//теперь мы можем возвращать массив
         $model = new PictureForm();
         $model->picture = UploadedFile::getInstance($model, 'picture');//в свойство picture загружаем экземпляр класса UploadedFile 
@@ -171,3 +197,4 @@ class ProfileController extends Controller {
 //        }
 //}
 }
+

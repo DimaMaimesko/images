@@ -83,6 +83,8 @@ return [
                'moreusers' => 'site/add-users', 
                'morefeeds' => 'site/add-feeds', 
                'experinent' => 'site/session-experinent', 
+               'ajaxtest' => 'site/ajax-test', 
+               //'moreposts' => 'profile/add-posts', 
                'profile/<nickname:\w+>' => 'user/profile/view', 
                'subscribe/<id:\d+>' => 'user/profile/subscribe', 
                'unsubscribe/<id:\d+>' => 'user/profile/unsubscribe', 

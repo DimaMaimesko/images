@@ -1,12 +1,17 @@
 <?php
 namespace frontend\controllers;
 
-use Yii;
+
 use yii\web\Controller;
 use frontend\models\User;
 use yii\web\Cookie;
 use GeoIp2\Database\Reader;
 use yii\base\ErrorException;
+
+use frontend\models\UploadedForm;
+use yii\web\UploadedFile;
+use yii\web\Response;
+use Yii;
 //use yii\web\Session;
 //use frontend\modules\post\models\Feed;
 
@@ -237,7 +242,68 @@ class SiteController extends Controller
        ]);
       
    }
-   
+   public function actionAjaxTest()
+   {
+//      if (!empty($_FILES)) {
+//            echo '<pre>';
+//            print_r($_FILES);
+//            echo '</pre>';die;
+//        }
+          //Yii::$app->response->format = Response::FORMAT_JSON;//теперь мы можем возвращать массив
+        $model = new UploadedForm();
+
+        if (Yii::$app->request->isPost) {
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            if ($model->upload()) {
+                // file is uploaded successfully
+                return;
+            }
+        }
+
+        return $this->render('ajax', ['model' => $model]);
+//return [ 'success' => true,]
+
+        
+   }
+   public function actionTest()
+   {
+         Yii::$app->response->format = Response::FORMAT_JSON;//теперь мы можем возвращать массив
+         $limit = Yii::$app->params['feedPostLimit'];
+        
+            /* @var $currentUser User */
+            $currentUser = Yii::$app->user->identity;
+           
+         
+        
+        $session = Yii::$app->session;
+        $session->open();
+        
+        if ($session->has('stateUsers')){
+             $stateUsers = $session->get('stateUsers');
+             $stateUsers +=Yii::$app->params['usersToShow'];
+             $session->set('stateUsers', $stateUsers);
+             $limitUsers = $stateUsers;
+         }else{
+             $session->set('stateUsers', Yii::$app->params['usersToShow']);
+             $limitUsers = $session->get('stateUsers');
+         }
+        
+         $users = User::getUsersWithLimit($limitUsers);
+         $isCurrentUser = User::isItCurrentUser($users); 
+         $isUserOnline = User::isUserOnline($users); 
+         $hrefForUserPage = User::hrefForUserPage($users); 
+         
+        return [         //это будет выглядеть вот так: {"success":true,"pictureUri":"/uploads/33/95/6d94b3c303573e2e9677cedfab68fd5626c7.jpg"}
+                     'success' => true,
+                     'users' => $users,
+                     'isCurrentUser' => $isCurrentUser,
+                     'isUserOnline' => $isUserOnline,
+                     'hrefForUserPage' => $hrefForUserPage,
+                     
+                 ];
+        
+  
+   }
    public static function generate()
    {
        sleep(4);

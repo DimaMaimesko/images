@@ -15,34 +15,29 @@ class Postslist extends Widget{
     public function run()
     {
         $currentUserId = Yii::$app->user->id;//будем использовать для вывода кнопок Like и Dislike
-        
+        $targetUserId = $this->id;
         
         $postsList = new Post();
-        $postsList = $postsList->getUserPosts($this->id);
-        if ($postsList){
-             //Yii::$app->session->setFlash('success', 'New post added');
-        } 
-        else{
-           //Yii::$app->session->setFlash('danger', 'Error!');  
-        }
-        
-        
+        $statePosts = Yii::$app->params['postsToShow'];
+        $postsList = Post::getUserPostsWithLimit($targetUserId, $statePosts);
+               
         if ($this->view_type == 1){
             return $this->render('index',[
            'postsList' => $postsList, 
            'currentUserId' => $currentUserId, 
-        ]);  
+           ]);  
         }
         if ($this->view_type == 2){
-             return $this->render('index2',[
+            return $this->render('index2',[
            'postsList' => $postsList, 
            'currentUserId' => $currentUserId, 
-        ]);  
+            ]);  
         }
         if ($this->view_type == 3){
-             return $this->render('index3',[
+            return $this->render('index3',[
            'postsList' => $postsList, 
            'currentUserId' => $currentUserId, 
+           'targetUserId' => $targetUserId,      
         ]);  
         }
        

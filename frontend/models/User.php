@@ -32,7 +32,7 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
     const DEFAULT_IMAGE = '/default/default.jpg';
-
+    
     /**
      * {@inheritdoc}
      */
@@ -315,10 +315,59 @@ class User extends ActiveRecord implements IdentityInterface
         return $post->find()->where(['user_id' => $id])->count();
     }
     
-    public static function getUsersWithLimit($limit = 3)
+    public static function getUsersWithLimit($limit =  3)
     {
-//print_r($limit);die;
         return self::find()->orderBy(['created_at' => SORT_DESC])->limit($limit)->all();
-    }     
+    }
     
+    public static function isItCurrentUser($users)
+    {
+        $testArr = [];
+       
+        foreach ($users as $key => $user) {
+            if (Yii::$app->user->id == $user->id){
+                $testArr[$key] = ['authorName' =>'bg-success'];  
+            }else{
+                $testArr[$key] = ['authorName' =>''];
+            }
+            
+        }
+        
+        return $testArr;
+       
+    }
+    public static function isUserOnline($users)
+    {
+        $testArr = [];
+       
+        foreach ($users as $key => $user) {
+            if(Yii::$app->onLineUsers->isUserOnline($user->id)){
+                $testArr[$key] = 1;  
+            }else{
+                $testArr[$key] = 0;
+            }
+            
+        }
+        
+        return $testArr;
+       
+    }
+    public static function hrefForUserPage($users)
+    {
+        $testArr = [];
+        foreach ($users as $key => $user) {
+            $testArr[$key] = "/profile/".$user->getNickname();
+        }
+        return $testArr;
+    }
+    
+     public static function sessionClear()
+    {
+         $session = Yii::$app->session;
+         $session->open();
+         $session->remove('stateUsers');
+         $session->remove('stateFeeds');
+         $session->remove('statePosts'); 
+    }
 }
+

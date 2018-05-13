@@ -15,7 +15,7 @@ use frontend\models\User;
     <div class="col-md-2">
         <h3>User posts(<?php echo User::countUserPosts($user->id); ?>):</h3>
         <div style="border: 3px dotted greenyellow; padding: 5px; margin: 5px;">
-            <?php echo Postslist::widget(['id' => $user->id,'view_type' => 1]);//$user->id - это id пользователя профайл которого мы сейчас просматриваем  ?>  
+            <?php //echo Postslist::widget(['id' => $user->id,'view_type' => 1]);//$user->id - это id пользователя профайл которого мы сейчас просматриваем  ?>  
         </div>
     </div>
     <div class="col-md-8">
@@ -154,7 +154,20 @@ use frontend\models\User;
     <?php endif; ?>
    
      <div class="col-sm-12 col-xs-12">
-          <h3>User posts(<?php echo User::countUserPosts($user->id); ?>):</h3>
+          <h3>User posts(<span id='postsShown'>
+              <?php if(User::countUserPosts($user->id) == 0):?>
+              <?php echo 0;?>
+              <?php endif;?>
+              <?php if(User::countUserPosts($user->id) == 1):?>
+              <?php echo 1;?>
+              <?php endif;?>
+              <?php if(User::countUserPosts($user->id) == 2):?>
+              <?php echo 2;?>
+              <?php endif;?>
+              <?php if(User::countUserPosts($user->id) >= 3):?>
+              <?php echo Yii::$app->params['postsToShow'];?>
+              <?php endif;?>
+               </span> from <span id='numberOfPosts'><?php echo User::countUserPosts($user->id); ?></span> ):</h3>
         <div style="border: 3px dotted greenyellow; padding: 5px; margin: 5px;">
             <?php echo Postslist::widget(['id' => $user->id,'view_type' => 3]);//$user->id - это id пользователя профайл которого мы сейчас просматриваем  ?>  
         </div>

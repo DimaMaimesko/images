@@ -60,6 +60,16 @@ class Post extends \yii\db\ActiveRecord
         return $this->find()->where(['user_id'=>$id])->asArray()->orderBy(['created_at' => SORT_DESC])->all();
     }
     
+    public static function getUserPostsWithLimit($id, $limit)
+    {
+        return self::find()->where(['user_id'=>$id])->asArray()->orderBy(['created_at' => SORT_DESC])->limit($limit)->all();
+    }
+    
+    public static function countPosts($id)
+    {
+        return self::find()->where(['user_id'=>$id])->asArray()->count();
+    }
+    
     public function getUserIdBy($postId)
     {
         $post = Post::findOne($postId);
@@ -159,3 +169,4 @@ class Post extends \yii\db\ActiveRecord
         
     }
 }
+

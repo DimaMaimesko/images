@@ -11,9 +11,13 @@ use frontend\modules\post\models\Comment;
 use yii\helpers\Url;
 
 ?>
-
- 
+ <?php if ($currentPost['user_id'] === Yii::$app->user->id): ?>
+ <a href="<?php echo Url::to(['/post/default/delete-post','postId' => $currentPost['id']]); ?>" type="button" class="close" aria-label="Close">
+     <span aria-hidden="true"><strong>&times;</strong></span>
+</a>
+ <?php endif;  ?>
 <hr>
+
 <p style="font-size:75%" class="text-right"><em><?php if ($currentPost['created_at'])echo date('Y-m-d H:i',$currentPost['created_at']); ?></em></p>
 <?php echo $currentPost['content']; ?>
 <br>
@@ -67,6 +71,7 @@ use yii\helpers\Url;
 
   
        
+
 
 
 
