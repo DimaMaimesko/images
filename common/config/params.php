@@ -12,5 +12,9 @@ return [
         'maxWidth' => 1280,
         'maxHeight' => 1024,
     ],
+    'thumbnailPicture' => [
+        'maxWidth' => 300,
+        'maxHeight' => 300,
+    ],
     'feedPostLimit' => 10,
 ];

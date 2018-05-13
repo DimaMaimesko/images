@@ -11,6 +11,7 @@ use Yii;
 class Postslist extends Widget{
     //put your code here
     public $id = null;
+    public $view_type = null;
     public function run()
     {
         $currentUserId = Yii::$app->user->id;//будем использовать для вывода кнопок Like и Dislike
@@ -24,9 +25,27 @@ class Postslist extends Widget{
         else{
            //Yii::$app->session->setFlash('danger', 'Error!');  
         }
-        return $this->render('index',[
+        
+        
+        if ($this->view_type == 1){
+            return $this->render('index',[
            'postsList' => $postsList, 
            'currentUserId' => $currentUserId, 
-        ]); 
+        ]);  
+        }
+        if ($this->view_type == 2){
+             return $this->render('index2',[
+           'postsList' => $postsList, 
+           'currentUserId' => $currentUserId, 
+        ]);  
+        }
+        if ($this->view_type == 3){
+             return $this->render('index3',[
+           'postsList' => $postsList, 
+           'currentUserId' => $currentUserId, 
+        ]);  
+        }
+       
     }
 }
+

@@ -95,13 +95,14 @@ class DefaultController extends Controller
      *
      * @return mixed
      */
-    public function actionLogout()
+public function actionLogout()
     {
+        $currentUser = Yii::$app->user->identity;
+        Yii::$app->onLineUsers->removeUser($currentUser->id);
         Yii::$app->user->logout();
 
         return $this->goHome();
-    }
-    
+    }    
     /**
      * Signs user up.
      *

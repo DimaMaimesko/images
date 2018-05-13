@@ -85,6 +85,12 @@ class Storage extends Component implements StorageInterface
     {
        return Yii::getAlias(Yii::$app->params['storagePathResized'].$this->userID.'/');
     }
+    
+    protected function getStoragePath2()
+    {
+       return Yii::getAlias(Yii::$app->params['storagePathResized'].$this->userID);
+    }
+
 
     /**
      * @param string $filename
@@ -92,9 +98,9 @@ class Storage extends Component implements StorageInterface
      */
     public function deleteFile(string $filename, $userId)
     {
-        $file = $this->getStoragePath().$filename;
-        $dirToFile = $this->getStoragePath();
-        $dirToFile = $dirToFile.$userId;
+        $file = $this->getStoragePath2().$filename;
+        $dirToFile = $this->getStoragePath2();
+        $dirToFile = $dirToFile.$userId.substr($filename, 2,3);
         $dirToFile = FileHelper::normalizePath($dirToFile);
         //print_r($dirToFile);die;
         FileHelper::removeDirectory($dirToFile,true);

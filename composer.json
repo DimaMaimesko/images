@@ -28,7 +28,8 @@
         "phpunit/phpunit": "6.5.x-dev",
         "codeception/codeception": "2.4.x-dev",
         "codeception/specify": "^1.0",
-        "codeception/verify": "dev-master"
+        "codeception/verify": "dev-master",
+        "geoip2/geoip2": "~2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

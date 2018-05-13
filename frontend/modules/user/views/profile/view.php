@@ -12,13 +12,13 @@ use frontend\models\User;
 //use frontend\widgets\commentslist\Commentslist;
 ?>
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-2">
         <h3>User posts(<?php echo User::countUserPosts($user->id); ?>):</h3>
         <div style="border: 3px dotted greenyellow; padding: 5px; margin: 5px;">
-            <?php echo Postslist::widget(['id' => $user->id]);//$user->id - это id пользователя профайл которого мы сейчас просматриваем  ?>  
+            <?php echo Postslist::widget(['id' => $user->id,'view_type' => 1]);//$user->id - это id пользователя профайл которого мы сейчас просматриваем  ?>  
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-8">
         
         <img src="<?php echo $user->getPicture(); ?>" id="profile-picture" style="max-width: 90%" class="img-circle center-block">
         <h5 id="name"></h5>
@@ -67,6 +67,7 @@ use frontend\models\User;
         <?php endif; ?>
         <hr>
         <!-- Small modal -->
+        <div class="">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal1">Following (<?= $user->getNumberOfSubscriptions(); ?>)</button>
         <!-- Modal -->
         <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -78,6 +79,8 @@ use frontend\models\User;
                     </div>
                     <div class="modal-body">
                         <?php foreach ($user->getSubscriptions() as $subscriber): ?>
+                        <img src="<?php echo $subscriber['picture'] ? '/uploads/resized/' . $subscriber['picture'] : '/default/default.jpg'; ?>" width="50" height="50" class="author-image" style="margin-right: 1px" />
+                        
                             <a href="<?= Url::to(['/user/profile/view', 'nickname' => ($subscriber['nickname']) ? $subscriber['nickname'] : $subscriber['id']]); ?>">
                                 <?= Html::encode($subscriber['username']); ?>
                             </a>
@@ -103,6 +106,7 @@ use frontend\models\User;
                     </div>
                     <div class="modal-body">
                         <?php foreach ($user->getFollowers() as $follower): ?>
+                         <img src="<?php echo $follower['picture'] ? '/uploads/resized/' . $follower['picture'] : '/default/default.jpg'; ?>" width="50" height="50" class="author-image" style="margin-right: 1px" />
                             <a href="<?= Url::to(['/user/profile/view', 'nickname' => ($follower['nickname']) ? $follower['nickname'] : $follower['id']]); ?>">
                                 <?= Html::encode($follower['username']); ?>
                             </a>
@@ -128,6 +132,7 @@ use frontend\models\User;
                     </div>
                     <div class="modal-body">
                         <?php foreach ($user->getFriends() as $friend): ?>
+                        <img src="<?php echo $friend['picture'] ? '/uploads/resized/' . $friend['picture'] : '/default/default.jpg'; ?>" width="50" height="50" class="author-image" style="margin-right: 1px" />
                             <a href="<?= Url::to(['/user/profile/view', 'nickname' => ($friend['nickname']) ? $friend['nickname'] : $friend['id']]); ?>">
                                 <?= Html::encode($friend['username']); ?>
                             </a>
@@ -141,6 +146,7 @@ use frontend\models\User;
                 </div>
             </div>
         </div>
+        </div>
         <br>
         <hr>
     <?php if (Yii::$app->user->id ==$user->id): ?>
@@ -148,25 +154,13 @@ use frontend\models\User;
     <?php endif; ?>
    
      <div class="col-sm-12 col-xs-12">
-                                        <div class="row profile-posts">
-                                            <div class="col-md-4 profile-post">
-                                                <a href="#"><img src="/img/demo/car.jpg" class="author-image" /></a>
-                                            </div>
-                                            <div class="col-md-4 profile-post">
-                                                <a href="#"><img src="/img/demo/car.jpg" class="author-image" /></a>
-                                            </div>
-                                            <div class="col-md-4 profile-post">
-                                                <a href="#"><img src="/img/demo/car.jpg" class="author-image" /></a>
-                                            </div>
-                                            <div class="col-md-4 profile-post">
-                                                <a href="#"><img src="/img/demo/car.jpg" class="author-image" /></a>
-                                            </div>
-                                            <div class="col-md-4 profile-post">
-                                                <a href="#"><img src="/img/demo/car.jpg" class="author-image" /></a>
-                                            </div>
-                                        </div>
-                                    </div>
+          <h3>User posts(<?php echo User::countUserPosts($user->id); ?>):</h3>
+        <div style="border: 3px dotted greenyellow; padding: 5px; margin: 5px;">
+            <?php echo Postslist::widget(['id' => $user->id,'view_type' => 3]);//$user->id - это id пользователя профайл которого мы сейчас просматриваем  ?>  
+        </div>
+                                     
      </div>
-    <div class="col-md-3"></div>
+    <div class="col-md-2"></div>
 </div>
+
 

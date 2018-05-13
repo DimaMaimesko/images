@@ -39,7 +39,9 @@ FontAwesomeAsset::register($this);
                             </h1>
                         </div>			
                         <div class="col-md-4 col-sm-4 navicons-topbar">
-                            <ul>
+                            <br>
+                            <br>                           
+                             <ul>
                                 <li class="blog-search">
                                     <a href="#" title="Search"><i class="fa fa-search"></i></a>
                                 </li>

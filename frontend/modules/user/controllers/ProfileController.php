@@ -38,7 +38,10 @@ class ProfileController extends Controller {
 //                                ]);  
 //                        }
 //                    }
-       
+   $session = Yii::$app->session;
+   $session->open();
+   $session->remove('stateUsers');  
+   $session->remove('stateFeeds');     
          $modelPicture = new PictureForm();
          $user = $this->findUser($nickname);
          $isFollower = $this->isFollower($user);
@@ -108,6 +111,11 @@ class ProfileController extends Controller {
     
     public function actionUploadPicture()   //AJAX
     {
+        if (Yii::$app->user->isGuest) {
+            Yii::$app->session->setFlash('info', 'You need login first!');
+            return $this->redirect(['/user/default/login']);
+        }
+
         Yii::$app->response->format = Response::FORMAT_JSON;//теперь мы можем возвращать массив
         $model = new PictureForm();
         $model->picture = UploadedFile::getInstance($model, 'picture');//в свойство picture загружаем экземпляр класса UploadedFile 

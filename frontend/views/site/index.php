@@ -10,25 +10,42 @@ use Yii;
 /* @var $currentUser frontend\models\User */
 /* @var $myFeeds frontend\modules\post\models\User */
 
-$this->title = 'My Yii2 Application';
+$this->title = 'My Yii Application';
 ?>
-<div class="site-index">
 
    
+   <div class="site-index">
 
     <div class="body-content">
 
         <div class="row">
             <div class="col-lg-2">
-                <h2>All Users</h2>
-               
-                <?php foreach ($users as $user): ?>
-                <a class="<?=  (Yii::$app->user->id == $user->id) ? 'bg-success' : ''; ?>"  href="<?= Url::to(['user/profile/view','nickname' => $user->getNickname()]); ?>"><?= $user->username; ?></a>   
-                <hr>
+                <h4>Explore users (<?= count($users); ?>)</h4>
+                <span class="bg-info">Active visitors: <strong><?php echo Yii::$app->onLineUsers->countGuests();?></strong></span>
+
+                 <?php foreach ($users as $user): ?>
+                    <div class="post-meta"> 
+                        <div class="post-title">
+                            <img src="<?php echo $user->picture ? '/uploads/resized/' . $user->picture : '/default/default.jpg'; ?>" width="50" height="50" class="author-image" style="margin-right: 1px" />
+                        
+                       <div class="author-name">
+                            <a class="<?= (Yii::$app->user->id == $user->id) ? 'bg-success' : ''; ?>"
+                               href="<?= Url::to(['user/profile/view', 'nickname' => $user->getNickname()]); ?>"><?= $user->username; ?>
+                            </a>
+                           <?php if(Yii::$app->onLineUsers->isUserOnline($user->id)): ?>
+                           <span class="bg-success">Online</span>
+                            <?php else: ?>
+                            <span class="bg-danger">Offline</span>
+                           <?php endif; ?>
+                        </div>
+                        </div>
+                    </div>
+                <hr style="margin-top: 1px; margin-bottom: 3px">
+
                 <?php endforeach; ?>
                
 
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
+                <p><a class="btn btn-default center-block" href="<?= Url::to(['site/add-users']); ?>">show more... &raquo;</a></p>
             </div>
             <div class="col-lg-8">
                 
@@ -36,21 +53,25 @@ $this->title = 'My Yii2 Application';
                        
                                
       
-                <h2>My feed</h2>
+                <h2>My feed (<?= count($myFeeds); ?>)</h2>
                               
                 <?php if ($myFeeds): ?>
                     <?php foreach ($myFeeds as $oneFeed): ?>
                         <hr> 
                                               
-                        <div class="col-md-12 bg-warning">
-                            <img src="<?php echo $oneFeed['author_picture']; ?>" width="40" height="40" class="img-circle" />
-                            <div class="author-name">
-                            <a href="<?php echo Url::to(['/user/profile/view', 'nickname' => ($oneFeed['author_nickname']) ? $oneFeed['author_nickname'] : $oneFeed['author_id']]); ?>">
-                                <?php echo Html::encode($oneFeed['author_nickname']); ?>
-                            </a>
-                            </div >   
-                            <?php echo " (" . Html::encode($oneFeed['author_name']) . ")"; ?>
-                        </div>
+                        
+                        <a href="<?php echo Url::to(['/user/profile/view', 'nickname' => ($oneFeed['author_nickname']) ? $oneFeed['author_nickname'] : $oneFeed['author_id']]); ?>">
+                                    <div class="col-md-12 bg-warning">
+                                        <img src="<?php echo $oneFeed['author_picture']; ?>" width="40" height="40" class="img-circle" />
+                                        <div class="author-name">
+
+                                            <?php echo Html::encode($oneFeed['author_nickname']); ?>
+
+                                        </div >   
+                                        <?php echo " (" . Html::encode($oneFeed['author_name']) . ")"; ?>
+                                    </div>
+                        </a>
+                               
                         <hr>
                         <p style="font-size:75%" class="text-right"><em><?php if ($oneFeed['post_created_at']) echo date('Y-m-d H:i', $oneFeed['post_created_at']); ?></em></p>
                         <?php echo $oneFeed['post_description']; ?>
@@ -77,10 +98,9 @@ $this->title = 'My Yii2 Application';
                         dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
                         ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
                         fugiat nulla pariatur.</p>
-
-                    <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p> 
+                    
                 <?php endif; ?>
-               
+               <p><a class="btn btn-default center-block" href="<?= Url::to(['site/add-feeds']); ?>">show more... &raquo;</a></p>
             </div>
             <div class="col-lg-8">
                
@@ -89,3 +109,4 @@ $this->title = 'My Yii2 Application';
 
     </div>
 </div>
+

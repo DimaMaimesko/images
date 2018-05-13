@@ -18,7 +18,7 @@ use frontend\modules\post\models\Comment;
 <?php echo $post['content']; ?>
 <br>
 <a  href="<?php echo Url::to(['/post/comments/comment-form-view','postId' => $post['id']]); ?>">
-<img src="/uploads/resized/<?php echo $post['photo']; ?>" id="profile-picture" style="max-width: 50%" class="center-block">
+<img src="/uploads/resized/<?php echo $post['photo']; ?>" id="post-picture" style="max-width: 50%" class="center-block">
 </a>
 <hr>
 

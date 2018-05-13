@@ -235,7 +235,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
        $redis = Yii::$app->redis;
        $setOfSubscriptions = $redis->executeCommand('smembers', ['user:'.$this->getId().':subscriptions']);
-       return User::find()->select('id,username,nickname')->where(['id' => $setOfSubscriptions])->orderBy('username')->asArray()->all();
+       return User::find()->select('id,username,nickname,picture')->where(['id' => $setOfSubscriptions])->orderBy('username')->asArray()->all();
     }
     public function getNumberOfSubscriptions()
     {
@@ -248,7 +248,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
        $redis = Yii::$app->redis;
        $setOfFollowers = $redis->executeCommand('smembers', ['user:'.$this->getId().':followers']);
-       return User::find()->select('id,username,nickname')->where(['id' => $setOfFollowers])->orderBy('username')->asArray()->all();
+       return User::find()->select('id,username,nickname,picture')->where(['id' => $setOfFollowers])->orderBy('username')->asArray()->all();
     }
     
     public static function getIdOfFollowers()
@@ -267,7 +267,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
        $redis = Yii::$app->redis;
        $setOfFriends = $redis->sinter("user:{$this->getId()}:subscriptions","user:{$this->getId()}:followers");
-       return User::find()->select('id,username,nickname')->where(['id' => $setOfFriends])->orderBy('username')->asArray()->all();
+       return User::find()->select('id,username,nickname,picture')->where(['id' => $setOfFriends])->orderBy('username')->asArray()->all();
     }
     public function getNumberOfFriends()
     {
@@ -314,6 +314,11 @@ class User extends ActiveRecord implements IdentityInterface
         $post = new Post();
         return $post->find()->where(['user_id' => $id])->count();
     }
-     
+    
+    public static function getUsersWithLimit($limit = 3)
+    {
+//print_r($limit);die;
+        return self::find()->orderBy(['created_at' => SORT_DESC])->limit($limit)->all();
+    }     
     
 }

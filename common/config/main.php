@@ -6,11 +6,35 @@ return [
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
+        
+//        'cache' => [
+//        'class' => 'yii\caching\MemCache',
+//        'servers' => [
+//            [
+//                'host' => 'server1',
+//                'port' => 11211,
+//                'weight' => 100,
+//            ],
+//           
+//        ],
+//    ],
+//        'cache' => [
+//            'class' => 'yii\caching\FileCache',
+//        ],
+        
         'cache' => [
-            'class' => 'yii\caching\FileCache',
+        'class' => 'yii\redis\Cache',
+         'redis' => [
+                'hostname' => 'localhost',
+                'port' => 6379,
+                'database' => 1,
+            ]
         ],
          'storage' => [
             'class' => 'frontend\components\Storage',
+        ],
+        'onLineUsers' => [
+            'class' => 'frontend\components\OnLineUsers',
         ],
          'redis' => [
             'class' => 'yii\redis\Connection',
@@ -24,3 +48,4 @@ return [
        
     ],
 ];
+

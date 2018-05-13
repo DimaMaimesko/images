@@ -61,8 +61,8 @@ class PostFormModel extends Model{
             * выполнение метода */
             return;
         }
-        $width = Yii::$app->params['profilePicture']['maxWidth'];
-        $height = Yii::$app->params['profilePicture']['maxHeight'];
+        $width = Yii::$app->params['thumbnailPicture']['maxWidth'];
+        $height = Yii::$app->params['thumbnailPicture']['maxHeight'];
         $manager = new ImageManager(array('driver' => 'imagick'));
         $image = $manager->make($this->photo->tempName); // получаем обьект класса Image используя
         // атрибут текущего класса picture(в нём находится обьект класса UploadedFile у которого есть 
@@ -75,7 +75,7 @@ class PostFormModel extends Model{
         $constraint->aspectRatio();
         // Изображения, размером меньше заданных $width, $height не будут изменены: 
         $constraint->upsize();
-        })->save();//сохраняем измененное изображение по тому же адрессу tmp/v43v5vdx 
+        })->crop(200,200)->save();//сохраняем измененное изображение по тому же адрессу tmp/v43v5vdx 
     }
     
     /**

@@ -41,12 +41,33 @@ return [
             // this is the name of the session cookie used for login on the frontend
             'name' => 'advanced-frontend',
         ],
+//        'session' => [
+//            'class' => 'yii\web\DbSession',
+//            'timeout' => 60*10,    //'expire' field
+//            'writeCallback' => function ($session) {
+//                return [
+//                    'user_id' => Yii::$app->user->id,
+//                    'last_write' => time(),
+//                ];
+//            },
+//        ],
+//       'cache2' => [
+//        'class' => 'yii\redis\Cache',
+////         'redis' => [
+////                'hostname' => 'localhost',
+////                'port' => 6379,
+////                'database' => 1,
+////            ]
+//        ],
+        
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    //'levels' => ['error', 'warning'],
+                    'levels' => ['info'],
+                    //'logVars' => [''],
                 ],
             ],
         ],
@@ -55,10 +76,13 @@ return [
         ],
         
         'urlManager' => [
-            'enablePrettyUrl' => false,
+            'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
                'privacy' => 'site/index', 
+               'moreusers' => 'site/add-users', 
+               'morefeeds' => 'site/add-feeds', 
+               'experinent' => 'site/session-experinent', 
                'profile/<nickname:\w+>' => 'user/profile/view', 
                'subscribe/<id:\d+>' => 'user/profile/subscribe', 
                'unsubscribe/<id:\d+>' => 'user/profile/unsubscribe', 
@@ -86,4 +110,9 @@ return [
         
     ],
     'params' => $params,
+//       'on afterRequest' => function () {
+//    //exit('Остановка перед запуском приложения.');
+//                
+//},   
 ];
+
