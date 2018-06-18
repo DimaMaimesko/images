@@ -1,6 +1,6 @@
  $(document).ready(function(){
-   
-     $("button#load").click(function(){
+     
+       $("button#load").click(function(){
         var params = {
           'id': $(this).attr('data-id')  
         };
@@ -112,5 +112,4 @@
    
   
 });
-
 

@@ -18,6 +18,9 @@ return [
         'user' => [
             'class' => 'backend\modules\user\Module',
         ],
+        'api' => [
+            'class' => 'backend\modules\api\Module',
+        ],
     ],
     'components' => [
         'request' => [
@@ -46,9 +49,12 @@ return [
         ],
       
         'urlManager' => [
-            'enablePrettyUrl' => false,
+            'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                 'manageusers' => 'user/manage', 
+                 'manageposts' => 'test/postadmin', 
+              
             ],
         ],
       

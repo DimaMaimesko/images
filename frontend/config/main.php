@@ -27,6 +27,10 @@ return [
         'post' => [
             'class' => 'frontend\modules\post\Module',
         ],
+        'geolocation' => [
+            'class' => 'frontend\modules\geolocation\Module',
+        ],
+        
      ],
     'components' => [
         'request' => [
@@ -90,6 +94,7 @@ return [
                'unsubscribe/<id:\d+>' => 'user/profile/unsubscribe', 
                'comments/<postId:\d+>' => 'post/comments/comment-form-view', 
                'edit/<postId:\d+>/<commentId:\d+>' => 'post/comments/edit', 
+               'mylocation/<nickname:\d+>' => 'geolocation/geolocation/index', 
             ],
         ],
        
@@ -117,4 +122,3 @@ return [
 //                
 //},   
 ];
-

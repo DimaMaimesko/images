@@ -70,6 +70,7 @@ FontAwesomeAsset::register($this);
                         ];
                         if (!Yii::$app->user->isGuest) {
                             $menuItems[] = ['label' => Yii::t('about', 'My page'), 'url' => ['/user/profile/view', 'nickname' => Yii::$app->user->id]];
+				  $menuItems[] = ['label' => Yii::t('about', 'Locate me'), 'url' => ['/geolocation/geolocation/index', 'nickname' => Yii::$app->user->id]];
                         }
                         if (Yii::$app->user->isGuest) {
                             $menuItems[] = ['label' => Yii::t('about', 'Signup'), 'url' => ['/user/default/signup']];

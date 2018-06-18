@@ -1,0 +1,107 @@
+<div class="geolocation-default-index">
+    <h1><?= $this->context->action->uniqueId ?></h1>
+    <p>
+        This is the view content for action "<?= $this->context->action->id ?>".
+        The action belongs to the controller "<?= get_class($this->context) ?>"
+        in the "<?= $this->context->module->id ?>" module.
+    </p>
+    <p>
+        You may customize this page by editing the following file:<br>
+        <code><?= __FILE__ ?></code>
+    </p>
+</div>
+
+
+
+<h1>My First Google Map</h1>
+
+<div id="map" style="width:400px;height:400px;background:yellow">My map will go here</div>
+<div id="map1" style="width:400px;height:400px;background:yellow">My map will go here</div>
+
+<p id="demo">Click the button to get your position.</p>
+<button onclick="getLocation()">Try It</button>
+
+<div id="mapholder"></div>
+<p id="demo-text"></p>
+
+<div id="mapholderWatch"></div>
+<p id="demo-text-watch"></p>
+
+<script>
+function myMap() {
+var mapOptions = {
+    center: new google.maps.LatLng(51.5, -0.12),
+    zoom: 9,
+    mapTypeId: google.maps.MapTypeId.SATELLITE
+}
+var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+var mapOptions = {
+    center: new google.maps.LatLng(51.5, -0.12),
+    zoom: 9,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+}
+var map = new google.maps.Map(document.getElementById("map1"), mapOptions);
+
+}
+if (navigator.geolocation) {
+  console.log('Geolocation is supported!');
+}
+else {
+  console.log('Geolocation is not supported for this Browser/OS.');
+}
+</script>
+<script>
+var x = document.getElementById("demo");
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+	 navigator.geolocation.getCurrentPosition(showTextPosition, showError);
+    } else { 
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+
+function showPosition(position) {
+    var lat = position.coords.latitude;
+    var lon = position.coords.longitude;
+    var latlon = new google.maps.LatLng(lat, lon)
+    var mapholder = document.getElementById('mapholder')
+    mapholder.style.height = '250px';
+    mapholder.style.width = '500px';
+
+    var myOptions = {
+    center:latlon,zoom:10,
+    mapTypeId:google.maps.MapTypeId.ROADMAP,
+    mapTypeControl:false,
+    navigationControlOptions:{style:google.maps.NavigationControlStyle.SMALL}
+    }
+    
+    var map = new google.maps.Map(document.getElementById("mapholder"), myOptions);
+    var marker = new google.maps.Marker({position:latlon,map:map,title:"You are here!"});
+}
+
+function showError(error) {
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            x.innerHTML = "User denied the request for Geolocation."
+            break;
+        case error.POSITION_UNAVAILABLE:
+            x.innerHTML = "Location information is unavailable."
+            break;
+        case error.TIMEOUT:
+            x.innerHTML = "The request to get user location timed out."
+            break;
+        case error.UNKNOWN_ERROR:
+            x.innerHTML = "An unknown error occurred."
+            break;
+    }
+}
+var x = document.getElementById("demo-text");
+function showTextPosition(position) {
+    x.innerHTML = "Latitude: " + position.coords.latitude + 
+    "<br>Longitude: " + position.coords.longitude;
+}
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCSC2Eca-gleFwSuaLBMMLePnCXoOxoHoo&callback=myMap"></script>
+

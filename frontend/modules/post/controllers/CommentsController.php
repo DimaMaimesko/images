@@ -5,7 +5,7 @@ use yii\web\Controller;
 use frontend\modules\post\models\Comment;
 use Yii;
 use frontend\modules\post\models\Post;
- 
+use frontend\modules\geolocation\models\Geotags;
 
 class CommentsController extends Controller {
 
@@ -29,9 +29,17 @@ class CommentsController extends Controller {
                return $this->refresh();
             }
         }
+        
+//        $geotagsModel = new Geotags();
+//        $geotag = $geotagsModel->find()->where(['post_id' => $postId])->one();
+//        $lat = $geotag->lat;
+//        $lng = $geotag->lng;
+        
         return $this->render('commentFormView', [
                     'model' => $model,
                     'postId' => $postId,
+//                    'lat' => $lat,
+//                    'lng' => $lng,
         ]);
     }
     

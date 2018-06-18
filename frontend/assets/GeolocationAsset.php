@@ -7,20 +7,17 @@ use yii\web\AssetBundle;
 /**
  * Main frontend application asset bundle.
  */
-class AppAsset extends AssetBundle
+class GeolocationAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/site.css',
-        'css/main.css',
+        
     ];
     public $js = [
-        'js/likes.js',
-        'js/scripts.js',
-        'js/report.js',
-        'js/ajaxtest.js',
-       
+        
+        'js/geo.js',
+        "https://maps.googleapis.com/maps/api/js?key=AIzaSyCSC2Eca-gleFwSuaLBMMLePnCXoOxoHoo&callback=initMap"
     ];
     public $depends = [
         'yii\web\YiiAsset',
